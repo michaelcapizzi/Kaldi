@@ -17,7 +17,12 @@ while getopts "g" opt; do
     esac
 done
 
-docker build \
-    --build-arg GPU_SUPPORT=${gpu} \
-    -f ../../Dockerfile \
-    -t docker-kaldi-instructional ../..
+if [[ ${gpu} == true ]]; then
+    docker build \
+        -f ../../docker/GPU/Dockerfile \
+        -t docker-kaldi-instructional ../..
+else
+    docker build \
+        -f ../../CPU/Dockerfile \
+        -t docker-kaldi-instructional ../..
+fi

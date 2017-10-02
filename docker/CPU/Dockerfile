@@ -22,6 +22,7 @@ RUN apt-get update -qq \
     python-wheel \
     tmux \
     ffmpeg \
+    unzip \
     # kaldi requirements
     g++ \
     libatlas3-base \
@@ -36,6 +37,18 @@ RUN apt-get update -qq \
     subversion \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
+
+# install java
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && apt-get install -y software-properties-common \
+ && add-apt-repository ppa:webupd8team/java -y \
+ && apt-get update \
+ && echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
+ && apt-get install -y oracle-java8-installer \
+ && apt-get clean
+
+# update pip
 RUN pip install --upgrade pip
 
 # install bash jupyter kernel
@@ -55,9 +68,7 @@ ENV IRSTLM=${KALDI_PATH}/tools/irstlm
 RUN extras/install_irstlm.sh
 RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
-ARG GPU_SUPPORT=false
-RUN extras/install_tensorflow_py.sh ${GPU_SUPPORT}
-RUN pip freeze > ${HOME}/pip_freeze.txt
+RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
 RUN extras/install_tensorflow_cc.sh
 # compile tools

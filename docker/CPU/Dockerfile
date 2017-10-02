@@ -82,8 +82,6 @@ RUN extras/check_installations.sh
 # compile remaining tools
 #RUN make -j 2
 
-
-
 # compile kaldi source code
 #WORKDIR ${KALDI_PATH}/src
 #RUN ./configure --shared

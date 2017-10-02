@@ -113,8 +113,7 @@ RUN extras/install_tensorflow_py.sh false
 RUN extras/install_tensorflow_cc.sh false
 
 # check installations
-# TODO get to work
-#RUN extras/check_installations.sh
+RUN extras/check_installations.sh
 
 # compile remaining tools
 #RUN make -j 2

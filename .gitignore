@@ -6,6 +6,9 @@
 !/src/*/Makefile
 !/src/*/README
 
+# jupyter checkpoints
+*/.ipynb_checkpoints/*
+
 # Compiled Object files and python ciles
 *.slo
 *.lo

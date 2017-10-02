@@ -3,6 +3,7 @@
 # OPTIONAL ARGUMENTS
 # -g = set GPU_SUPPORT to true
 
+
 gpu=false
 
 while getopts "g" opt; do
@@ -20,9 +21,9 @@ done
 if [[ ${gpu} == true ]]; then
     docker build \
         -f GPU/Dockerfile \
-        -t docker-kaldi-instructional ../..
+        -t docker-kaldi-instructional ../
 else
     docker build \
         -f CPU/Dockerfile \
-        -t docker-kaldi-instructional ../..
+        -t docker-kaldi-instructional ../
 fi

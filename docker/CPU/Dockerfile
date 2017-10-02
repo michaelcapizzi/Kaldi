@@ -52,7 +52,7 @@ RUN apt-get update -qq \
 # update pip
 RUN pip install --upgrade pip
 
-# install bash jupyter kernel
+# install jupyter kernel for bash
 RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 
 # clone kaldi_instructional
@@ -72,8 +72,6 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
 RUN extras/install_tensorflow_cc.sh false
-
-
 
 # compile remaining tools
 #RUN make -j 2

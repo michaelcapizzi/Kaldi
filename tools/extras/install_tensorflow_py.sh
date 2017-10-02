@@ -6,8 +6,6 @@
 
 has_gpu=$1
 
-echo "here"
-
 if [[ $has_gpu == "true" ]]; then
     tf_source=https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.2.0-cp27-none-linux_x86_64.whl
 else

@@ -25,7 +25,7 @@ printf "#include <stdio.h>\\n#include <tensorflow/c/c_api.h>\n\n" > ${location}/
 printf "int main() {\n    printf(\"TF C code works\");\n    return 0;\n}" >> ${location}/hello_world.c
 
 # run test script
-gcc -I${location}/include -L${location}/lib ${location}hello_world.c -ltensorflow
+gcc -I${location}/include -L${location}/lib ${location}/hello_world.c -ltensorflow
 ${location}/a.out || (printf "C code compilation failed\n" && exit 1)
 
 # remove compiled test script

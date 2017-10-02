@@ -108,7 +108,8 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 RUN extras/install_tensorflow_py.sh true
 # tensorflow (C)
 RUN extras/install_tensorflow_cc.sh true
-# compile tools
+
+# compile remaining tools
 #RUN make -j 2
 
 # make sure all dependencies are present

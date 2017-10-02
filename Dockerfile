@@ -6,9 +6,10 @@ MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 # ENV variables
 ENV HOME=/home/
 ENV SHELL=/bin/bash
-ENV KALDI_PATH=${HOME}/kaldi/
-ENV KALDI_INSTRUCTIONAL_PATH=${HOME}/kaldi/egs/INSTRUCTIONAL
+ENV KALDI_PATH=${HOME}/kaldi
+ENV KALDI_INSTRUCTIONAL_PATH=${KALDI_PATH}/egs/INSTRUCTIONAL
 ENV IRSTLM=${KALDI_PATH}/tools/irstlm
+ENV GPU_SUPPORT=true
 
 # install dependencies
 RUN apt-get update -qq \
@@ -52,7 +53,7 @@ WORKDIR ${KALDI_PATH}/tools
 RUN extras/install_irstlm.sh
 RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow
-#RUN extras/install_tensorflow_py.sh
+RUN extras/install_tensorflow_py.sh ${GPU_SUPPORT}
 # compile tools
 #RUN make -j 2
 

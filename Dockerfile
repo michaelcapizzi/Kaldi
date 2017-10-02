@@ -8,8 +8,6 @@ ENV HOME=/home/
 ENV SHELL=/bin/bash
 ENV KALDI_PATH=${HOME}/kaldi
 ENV KALDI_INSTRUCTIONAL_PATH=${KALDI_PATH}/egs/INSTRUCTIONAL
-ENV IRSTLM=${KALDI_PATH}/tools/irstlm
-ENV GPU_SUPPORT=true
 
 # install dependencies
 RUN apt-get update -qq \
@@ -50,9 +48,11 @@ RUN git clone https://github.com/michaelcapizzi/kaldi.git
 # install kaldi-specific tools
 WORKDIR ${KALDI_PATH}/tools
 # irstlm
+ENV IRSTLM=${KALDI_PATH}/tools/irstlm
 RUN extras/install_irstlm.sh
 RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow
+ENV GPU_SUPPORT=false
 RUN extras/install_tensorflow_py.sh ${GPU_SUPPORT}
 # compile tools
 #RUN make -j 2

@@ -15,7 +15,7 @@ curl -L \
     "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-${tf_type}-linux-x86_64-1.3.0.tar.gz" |
     tar -C ${location} -xz
 
-#ldconfig
+ldconfig
 
 export LIBRARY_PATH=${LIBRARY_PATH}:${KALDI_PATH}/tools/${location}
 export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${KALDI_PATH}/tools/${location}

@@ -3,8 +3,8 @@
 FROM ubuntu:16.04
 MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 
-# ENV variables
-ENV HOME=/home/
+# ENV and ARG variables
+ARG HOME=/home/
 ENV SHELL=/bin/bash
 ENV KALDI_PATH=${HOME}/kaldi
 ENV KALDI_INSTRUCTIONAL_PATH=${KALDI_PATH}/egs/INSTRUCTIONAL
@@ -44,6 +44,9 @@ RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 # clone kaldi_instructional
 WORKDIR ${HOME}
 RUN git clone https://github.com/michaelcapizzi/kaldi.git
+WORKDIR ${KALDI_PATH}
+RUN git fetch
+RUN git checkout kaldi_instructional
 
 # install kaldi-specific tools
 WORKDIR ${KALDI_PATH}/tools
@@ -51,9 +54,12 @@ WORKDIR ${KALDI_PATH}/tools
 ENV IRSTLM=${KALDI_PATH}/tools/irstlm
 RUN extras/install_irstlm.sh
 RUN export PATH=${PATH}:${IRSTLM}/bin
-# tensorflow
-ENV GPU_SUPPORT=false
+# tensorflow (python)
+ARG GPU_SUPPORT=false
 RUN extras/install_tensorflow_py.sh ${GPU_SUPPORT}
+RUN pip freeze > ${HOME}/pip_freeze.txt
+# tensorflow (C)
+RUN extras/install_tensorflow_cc.sh
 # compile tools
 #RUN make -j 2
 
@@ -64,6 +70,11 @@ RUN extras/check_dependencies.sh
 #WORKDIR ${KALDI_PATH}/src
 #RUN ./configure --shared
 #make depend -j 2
-#make -j 2
 
-WORKDIR ${KALDI_INSTRUCTIONAL}
+# compile TF C code
+#WORKDIR ${KALDI_PATH}/src/tfrnnlm
+#RUN make -j 2
+#WORKDIR ${KALDI_PATH}/src
+#RUN make -j 2
+
+WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

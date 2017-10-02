@@ -87,9 +87,7 @@ RUN extras/check_installations.sh
 # compile kaldi source code
 #WORKDIR ${KALDI_PATH}/src
 #RUN ./configure --shared
-#make depend -j 2
-
-# compile tensorflow C code
+#RUN make depend -j 2
 #WORKDIR ${KALDI_PATH}/src/tfrnnlm
 #RUN make -j 2
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin

@@ -6,7 +6,7 @@ export KALDI_ROOT=`pwd`/../../
 # adds librispeech_instructional/utils to $PATH
 # adds openfst to $PATH
 # adds IRSTLM to $PATH
-export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/irstlm/bin:$PWD:$PATH
+export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$PWD:$PATH
 
 [ ! -f $KALDI_ROOT/tools/config/common_path.sh ] && echo >&2 "The standard file $KALDI_ROOT/tools/config/common_path.sh is not present -> Exit!" && exit 1
 . $KALDI_ROOT/tools/config/common_path.sh

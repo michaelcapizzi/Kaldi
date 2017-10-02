@@ -10,19 +10,20 @@ if [ -z ${KALDI_PATH} ]; then
     exit 1
 fi
 
-# source ths path.sh file
-${KALDI_PATH}/path.sh
-
 ##########
 # IRSTLM #
 ##########
-
-build-lm.sh
+IRSTLM=${KALDI_PATH}/tools/irstlm
+if [[ `expr index ${PATH} ${IRSTLM}` != 0 ]]; then
+    export IRSTLM=${IRSTLM}
+    export PATH=${PATH}:${IRSTLM}/bin
+fi
+build-lm.sh -h || (printf "irstlm not correctly installed or linked" && exit 1)
 
 #####################
 # tensorflow (python)
 #####################
-python -m "import tensorflow as tf" || (printf "tensorflow (python) not correctly installed" \
+python -c "import tensorflow as tf" || (printf "tensorflow (python) not correctly installed" \
     && exit 1)
 
 ################
@@ -34,8 +35,9 @@ printf "#include <stdio.h>\\n#include <tensorflow/c/c_api.h>\n\n" > ${TENSORFLOW
 printf "int main() {\n    printf(\"TF C code works\");\n    return 0;\n}" \
     >> ${TENSORFLOW_CC}/hello_world.c
 # run test script
+cd ${TENSORFLOW_CC}
 gcc -I${TENSORFLOW_CC}/include -L${TENSORFLOW_CC}/lib ${TENSORFLOW_CC}/hello_world.c -ltensorflow
 ${TENSORFLOW_CC}/a.out || (printf "tensorflow_c not correctly installed" && exit 1)
 
 # remove compiled test script
-${TENSORFLOW_CC}/a.out
+rm ${TENSORFLOW_CC}/a.out

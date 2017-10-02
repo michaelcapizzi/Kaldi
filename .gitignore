@@ -44,9 +44,6 @@ GRTAGS
 GPATH
 GSYMS
 
-# python compiled sources
-*.pyc
-
 # Make dependencies
 .depend.mk
 
@@ -134,3 +131,9 @@ GSYMS
 /tools/phonetisaurus-g2p
 /tools/phonetisaurus-g2p/
 /kaldiwin_vs*
+
+# intellij folder
+.idea/
+
+# Mac OS
+*/.DS_Store

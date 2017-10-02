@@ -23,9 +23,17 @@ export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${KALDI_PATH}/tools/${location}
 # write test script
 printf "#include <stdio.h>\\n#include <tensorflow/c/c_api.h>\n\n" > ${location}/hello_world.c
 printf "int main() {\n    printf(\"TF C code works\");\n    return 0;\n}" >> ${location}/hello_world.c
+
 # run test script
-gcc ${location}/hello_world.c
-tensorflow/hello_world
+cd ../tensorflow
+gcc -I${location}/include -L${location}/lib hello_world.c -ltensorflow
+./a.out || (printf "C code compilation failed\n" && exit 1)
+
+# remove compiled test script
+rm a.out
+
+# ORIGINAL SCRIPT IN REPO #
+###########################
 
 #
 #set -e

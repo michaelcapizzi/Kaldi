@@ -62,6 +62,9 @@ WORKDIR ${KALDI_PATH}
 RUN git fetch
 RUN git checkout kaldi_instructional
 
+# make sure all dependencies are present
+RUN tools/extras/check_dependencies.sh
+
 # install kaldi-specific tools
 WORKDIR ${KALDI_PATH}/tools
 # irstlm
@@ -71,14 +74,15 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
 RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
-ARG TENSORFLOW_CC=${KALDI_PATH}/tools/tensorflow
 RUN extras/install_tensorflow_cc.sh false
+
+# check installations
+RUN extras/check_installations.sh
 
 # compile remaining tools
 #RUN make -j 2
 
-# make sure all dependencies are present
-RUN extras/check_dependencies.sh
+
 
 # compile kaldi source code
 #WORKDIR ${KALDI_PATH}/src

@@ -71,6 +71,7 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
 RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
+ARG TENSORFLOW_CC=${KALDI_PATH}/tools/tensorflow
 RUN extras/install_tensorflow_cc.sh false
 
 # compile remaining tools

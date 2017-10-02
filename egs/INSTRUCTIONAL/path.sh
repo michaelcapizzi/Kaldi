@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # adds root directory of `kaldi` to $PATH
-export KALDI_ROOT=`pwd`/../../..
+export KALDI_ROOT=`pwd`/../../
 
 # adds librispeech_instructional/utils to $PATH
 # adds openfst to $PATH
-export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$PWD:$PATH
+# adds IRSTLM to $PATH
+export PATH=$PWD/utils/:$KALDI_ROOT/tools/openfst/bin:$KALDI_ROOT/tools/irstlm/bin:$PWD:$PATH
 
 [ ! -f $KALDI_ROOT/tools/config/common_path.sh ] && echo >&2 "The standard file $KALDI_ROOT/tools/config/common_path.sh is not present -> Exit!" && exit 1
 . $KALDI_ROOT/tools/config/common_path.sh

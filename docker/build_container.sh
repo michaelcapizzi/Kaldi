@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+# script to begin the docker build process
+# NOTE: **MUST** be run from docker/
+
 # OPTIONAL ARGUMENTS
 # -g = set GPU_SUPPORT to true
-
 
 gpu=false
 

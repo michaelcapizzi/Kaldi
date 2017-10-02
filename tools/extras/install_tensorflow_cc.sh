@@ -8,22 +8,24 @@ else
     tf_type=cpu
 fi
 
+location=${KALDI_PATH}/tools/tensorflow
+mkdir -p ${location}
+
 curl -L \
-    "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-${tf_type}-linux-x86_64
-    -1.3.0.tar.gz" |
-    tar -C tensorflow_build -xz
+    "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-${tf_type}-linux-x86_64-1.3.0.tar.gz" |
+    tar -C ${location} -xz
 
-ldconfig
+#ldconfig
 
-export LIBRARY_PATH=${LIBRARY_PATH}:${KALDI_PATH}/tools/tensorflow_build
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${KALDI_PATH}/tools/tensorflow_build
+export LIBRARY_PATH=${LIBRARY_PATH}:${KALDI_PATH}/tools/${location}
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${KALDI_PATH}/tools/${location}
 
 # write test script
-echo "#include <stdio.h>\n#include <tensorflow/c/c_api.h>\n\n" > tensorflow_build/hello_world.c
-echo "int main() {\n   printf(\"TF C code works\");\return 0;\n}" >> tensorflow_build/hello_world.c
+printf "#include <stdio.h>\\n#include <tensorflow/c/c_api.h>\n\n" > ${location}/hello_world.c
+printf "int main() {\n    printf(\"TF C code works\");\n    return 0;\n}" >> ${location}/hello_world.c
 # run test script
-gcc tensorflow_build/hello_world.c
-tensorflow_build/hello_world
+gcc ${location}/hello_world.c
+tensorflow/hello_world
 
 #
 #set -e

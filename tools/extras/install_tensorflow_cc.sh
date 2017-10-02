@@ -29,7 +29,7 @@ gcc -I${location}/include -L${location}/lib ${location}hello_world.c -ltensorflo
 ${location}/a.out || (printf "C code compilation failed\n" && exit 1)
 
 # remove compiled test script
-rm a.out
+rm ${location}/a.out
 
 # ORIGINAL SCRIPT IN REPO #
 ###########################

@@ -70,8 +70,11 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
 RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
-RUN extras/install_tensorflow_cc.sh
-# compile tools
+RUN extras/install_tensorflow_cc.sh false
+
+
+
+# compile remaining tools
 #RUN make -j 2
 
 # make sure all dependencies are present
@@ -82,8 +85,10 @@ RUN extras/check_dependencies.sh
 #RUN ./configure --shared
 #make depend -j 2
 
-# compile TF C code
+# compile tensorflow C code
 #WORKDIR ${KALDI_PATH}/src/tfrnnlm
+#RUN make -j 2
+#WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
 #RUN make -j 2
 #WORKDIR ${KALDI_PATH}/src
 #RUN make -j 2

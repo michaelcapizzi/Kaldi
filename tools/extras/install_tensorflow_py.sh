@@ -2,7 +2,7 @@
 
 # $1 <bool> install with GPU support?
 
-export HOME=$PWD/tensorflow_build/
+#export HOME=$PWD/tensorflow_build/
 
 has_gpu=$1
 

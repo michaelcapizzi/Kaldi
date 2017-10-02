@@ -23,6 +23,6 @@ if [[ ${gpu} == true ]]; then
         -t docker-kaldi-instructional ../..
 else
     docker build \
-        -f ../../CPU/Dockerfile \
+        -f ../../docker/CPU/Dockerfile \
         -t docker-kaldi-instructional ../..
 fi

@@ -1,5 +1,7 @@
 # docker-kaldi-instructional - A simplified version of Kaldi in Docker
 
+# TODO test!!
+
 FROM ubuntu:16.04
 MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 
@@ -104,7 +106,7 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
 RUN extras/install_tensorflow_py.sh true
 # tensorflow (C)
-RUN extras/install_tensorflow_cc.sh
+RUN extras/install_tensorflow_cc.sh true
 # compile tools
 #RUN make -j 2
 

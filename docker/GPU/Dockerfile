@@ -25,6 +25,7 @@ RUN apt-get update -qq \
     tmux \
     ffmpeg \
     unzip \
+    curl \
     # kaldi requirements
     g++ \
     libatlas3-base \
@@ -41,14 +42,14 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/*
 
 # install java
-RUN apt-get update \
- && apt-get upgrade -y \
- && apt-get install -y software-properties-common \
- && add-apt-repository ppa:webupd8team/java -y \
- && apt-get update \
- && echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
- && apt-get install -y oracle-java8-installer \
- && apt-get clean
+#RUN apt-get update \
+# && apt-get upgrade -y \
+# && apt-get install -y software-properties-common \
+# && add-apt-repository ppa:webupd8team/java -y \
+# && apt-get update \
+# && echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
+# && apt-get install -y oracle-java8-installer \
+# && apt-get clean
 
 # install CUDA
 # copied from https://gitlab.com/nvidia/cuda/blob/ubuntu16.04/8.0/runtime/Dockerfile

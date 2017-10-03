@@ -10,6 +10,9 @@ if [ -z ${KALDI_PATH} ]; then
     exit 1
 fi
 
+# source file with some path info
+. ${KALDI_PATH}/egs/INSTALLATION/path.sh
+
 ##########
 # IRSTLM #
 ##########
@@ -41,3 +44,8 @@ ${TENSORFLOW_CC}/a.out || (printf "tensorflow_c not correctly installed" && exit
 
 # remove compiled test script
 rm ${TENSORFLOW_CC}/a.out
+
+#########
+# openfst
+#########
+fstinfo --help || (printf "openfst not correctly installed or linked" && exit 1)

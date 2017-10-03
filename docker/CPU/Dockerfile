@@ -80,7 +80,7 @@ RUN extras/install_tensorflow_cc.sh false
 RUN extras/check_installations.sh
 
 # compile remaining tools
-#RUN make -j 2
+RUN make -j 2
 
 # compile kaldi source code
 #WORKDIR ${KALDI_PATH}/src

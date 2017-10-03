@@ -9,7 +9,7 @@
 # -t = set number of threads to use during compilation steps
 
 gpu=false
-mem=2g
+mem=4g
 threads=2
 
 while getopts "gm:t:" opt; do

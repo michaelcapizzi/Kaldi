@@ -62,9 +62,6 @@ WORKDIR ${KALDI_PATH}
 RUN git fetch
 RUN git checkout kaldi_instructional
 
-# make sure all dependencies are present
-RUN tools/extras/check_dependencies.sh
-
 # install kaldi-specific tools
 WORKDIR ${KALDI_PATH}/tools
 # irstlm
@@ -77,11 +74,11 @@ RUN extras/install_tensorflow_py.sh false
 RUN extras/install_tensorflow_cc.sh false
 
 # compile remaining tools
-#RUN make -j ${THREADS}
+RUN make
 
 # compile kaldi source code
-#WORKDIR ${KALDI_PATH}/src
-#RUN ./configure --shared
+WORKDIR ${KALDI_PATH}/src
+RUN ./configure --shared
 #RUN make depend -j ${THREADS}
 #WORKDIR ${KALDI_PATH}/src/tfrnnlm
 #RUN make -j ${THREADS}
@@ -91,6 +88,7 @@ RUN extras/install_tensorflow_cc.sh false
 #RUN make -j ${THREADS}
 
 # check installations
+WORKDIR ${KALDI_PATH}/tools
 RUN extras/check_installations.sh
 
 WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

@@ -81,9 +81,9 @@ WORKDIR ${KALDI_PATH}/src
 RUN ./configure --shared
 RUN make depend -j ${THREADS}
 WORKDIR ${KALDI_PATH}/src/tfrnnlm
-#RUN make -j ${THREADS}
+RUN make -j ${THREADS}
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
-#RUN make -j ${THREADS}
+#RUN make -j ${THREADS}i
 #WORKDIR ${KALDI_PATH}/src
 #RUN make -j ${THREADS}
 

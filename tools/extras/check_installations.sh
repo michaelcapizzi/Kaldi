@@ -52,4 +52,4 @@ cd ${TENSORFLOW_CC}
 #########
 # openfst
 #########
-fstinfo --help || (printf "openfst not correctly installed or linked" && exit 1)
+#fstinfo --help || (printf "openfst not correctly installed or linked" && exit 1)

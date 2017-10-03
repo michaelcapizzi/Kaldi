@@ -33,16 +33,13 @@ python -c "import tensorflow as tf" || (printf "tensorflow (python) not correctl
 ################
 # tensorflow (C)
 ################
-echo ${KALDI_PATH}
-ls ${KALDI_PATH}/tools
-TENSORFLOW_CC=${KALDI_PATH}/tools/tensorflow
-ls ${TENSORFLOW_CC}
+#TENSORFLOW_CC=${KALDI_PATH}/tools/tensorflow
 # write test script
-printf "#include <stdio.h>\\n#include <tensorflow/c/c_api.h>\n\n" > ${TENSORFLOW_CC}/hello_world.c
-printf "int main() {\n    printf(\"TF C code works\");\n    return 0;\n}" \
-    >> ${TENSORFLOW_CC}/hello_world.c
+#printf "#include <stdio.h>\\n#include <tensorflow/c/c_api.h>\n\n" > ${TENSORFLOW_CC}/hello_world.c
+#printf "int main() {\n    printf(\"TF C code works\");\n    return 0;\n}" \
+#    >> ${TENSORFLOW_CC}/hello_world.c
 # run test script
-cd ${TENSORFLOW_CC}
+#cd ${TENSORFLOW_CC}
 #gcc -I${TENSORFLOW_CC}/include -L${TENSORFLOW_CC}/lib ${TENSORFLOW_CC}/hello_world.c -ltensorflow
 #${TENSORFLOW_CC}/a.out || (printf "tensorflow_c not correctly installed" && exit 1)
 

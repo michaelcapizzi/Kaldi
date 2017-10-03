@@ -48,4 +48,4 @@ rm ${TENSORFLOW_CC}/a.out
 #########
 # openfst
 #########
-#fstinfo --help || (printf "openfst not correctly installed or linked" && exit 1)
+fstinfo --help || (printf "openfst not correctly installed or linked" && exit 1)

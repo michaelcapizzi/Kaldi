@@ -76,21 +76,21 @@ RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
 RUN extras/install_tensorflow_cc.sh false
 
-# check installations
-RUN extras/check_installations.sh
-
 # compile remaining tools
-RUN make -j 2
+RUN make -j ${MEM}
 
 # compile kaldi source code
 #WORKDIR ${KALDI_PATH}/src
 #RUN ./configure --shared
-#RUN make depend -j 2
+#RUN make depend -j ${MEM}
 #WORKDIR ${KALDI_PATH}/src/tfrnnlm
-#RUN make -j 2
+#RUN make -j ${MEM}
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
-#RUN make -j 2
+#RUN make -j ${MEM}
 #WORKDIR ${KALDI_PATH}/src
-#RUN make -j 2
+#RUN make -j ${MEM}
+
+# check installations
+RUN extras/check_installations.sh
 
 WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

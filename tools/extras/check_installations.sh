@@ -11,7 +11,7 @@ if [ -z ${KALDI_PATH} ]; then
 fi
 
 # source file with some path info
-. ${KALDI_PATH}/egs/INSTALLATION/path.sh
+. ${KALDI_PATH}/egs/INSTRUCTIONAL/path.sh
 
 ##########
 # IRSTLM #

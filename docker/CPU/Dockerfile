@@ -79,8 +79,8 @@ RUN make
 # compile kaldi source code
 WORKDIR ${KALDI_PATH}/src
 RUN ./configure --shared
-#RUN make depend -j ${THREADS}
-#WORKDIR ${KALDI_PATH}/src/tfrnnlm
+RUN make depend -j ${THREADS}
+WORKDIR ${KALDI_PATH}/src/tfrnnlm
 #RUN make -j ${THREADS}
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
 #RUN make -j ${THREADS}
@@ -88,7 +88,6 @@ RUN ./configure --shared
 #RUN make -j ${THREADS}
 
 # check installations
-WORKDIR ${KALDI_PATH}/tools
-RUN extras/check_installations.sh
+RUN ${KALDI_PATH}/tools/extras/check_installations.sh
 
 WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

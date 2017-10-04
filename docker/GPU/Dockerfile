@@ -2,7 +2,7 @@
 
 # TODO test!!
 
-FROM ubuntu:16.04
+FROM cuda:8.0-runtime         # starts with a NVIDIA cuda image
 MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 
 # ENV and ARG variables

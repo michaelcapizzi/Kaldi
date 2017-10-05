@@ -1,5 +1,7 @@
 # docker-kaldi-instructional - A simplified version of Kaldi in Docker
 
+# TODO collapse lines
+
 FROM ubuntu:16.04
 MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 
@@ -24,7 +26,6 @@ RUN apt-get update -qq \
     ffmpeg \
     unzip \
     curl \
-    # kaldi requirements
     g++ \
     libatlas3-base \
     zlib1g-dev \
@@ -39,15 +40,10 @@ RUN apt-get update -qq \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
-# install java
-#RUN apt-get update \
-# && apt-get upgrade -y \
-# && apt-get install -y software-properties-common \
-# && add-apt-repository ppa:webupd8team/java -y \
-# && apt-get update \
-# && echo oracle-java7-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
-# && apt-get install -y oracle-java8-installer \
-# && apt-get clean
+# install bazel
+RUN wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh
+RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh
+RUN ./bazel-0.5.4-installer-linux-x86_64.sh
 
 # update pip
 RUN pip install --upgrade pip
@@ -71,23 +67,32 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
 RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
-RUN extras/install_tensorflow_cc.sh false
+WORKDIR ${KALDI_PATH}/tools
+#RUN extras/install_tensorflow_cc.sh false
+RUN git clone https://github.com/tensorflow/tensorflow
+WORKDIR ${KALDI_PATH}/tools/tensorflow
+#ENV TF_NEED_CUDA=1
+RUN ./configure
+RUN tensorflow/contrib/makefile/download_dependencies.sh
+RUN bazel build -c opt //tensorflow:libtensorflow.so
+RUN bazel build -c opt //tensorflow:libtensorflow_cc.so
 
 # compile remaining tools
+WORKDIR ${KALDI_PATH}/tools
 RUN make
 
 # compile kaldi source code
 WORKDIR ${KALDI_PATH}/src
 RUN ./configure --shared
 RUN make depend -j ${THREADS}
+WORKDIR ${KALDI_PATH}/src
+RUN make
 WORKDIR ${KALDI_PATH}/src/tfrnnlm
-RUN make -j ${THREADS}
+RUN make  # see https://github.com/tensorflow/tensorflow/issues/12482 to fix error
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
 #RUN make -j ${THREADS}i
-#WORKDIR ${KALDI_PATH}/src
-#RUN make -j ${THREADS}
 
 # check installations
-RUN ${KALDI_PATH}/tools/extras/check_installations.sh
+#RUN ${KALDI_PATH}/tools/extras/check_installations.sh
 
 WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

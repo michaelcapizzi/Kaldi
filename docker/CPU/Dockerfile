@@ -84,11 +84,12 @@ RUN make
 # compile kaldi source code
 WORKDIR ${KALDI_PATH}/src
 RUN ./configure --shared
-RUN make depend -j ${THREADS}
+RUN make depend -j
 WORKDIR ${KALDI_PATH}/src
 RUN make
 WORKDIR ${KALDI_PATH}/src/tfrnnlm
-RUN make  # see https://github.com/tensorflow/tensorflow/issues/12482 to fix error
+RUN cp ${KALDI_PATH}/tools/tensorflow/tensorflow/contrib/makefile/downloads/nsync/public/nsync*.h /usr/include    # see https://github.com/tensorflow/tensorflow/issues/12482
+#RUN make
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
 #RUN make -j ${THREADS}i
 

@@ -88,9 +88,9 @@ WORKDIR ${KALDI_PATH}/src
 RUN make
 WORKDIR ${KALDI_PATH}/src/tfrnnlm
 RUN cp ${KALDI_PATH}/tools/tensorflow/tensorflow/contrib/makefile/downloads/nsync/public/nsync*.h /usr/include    # see https://github.com/tensorflow/tensorflow/issues/12482
-#RUN make
+RUN make
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
-#RUN make -j ${THREADS}i
+#RUN make
 
 # check installations
 #RUN ${KALDI_PATH}/tools/extras/check_installations.sh

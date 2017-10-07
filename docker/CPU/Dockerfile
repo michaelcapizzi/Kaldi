@@ -68,7 +68,6 @@ RUN export PATH=${PATH}:${IRSTLM}/bin
 RUN extras/install_tensorflow_py.sh false
 # tensorflow (C)
 WORKDIR ${KALDI_PATH}/tools
-#RUN extras/install_tensorflow_cc.sh false
 RUN git clone https://github.com/tensorflow/tensorflow
 WORKDIR ${KALDI_PATH}/tools/tensorflow
 #ENV TF_NEED_CUDA=1

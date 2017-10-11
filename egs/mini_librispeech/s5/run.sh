@@ -67,9 +67,9 @@ if [ $stage -le 1 ]; then
 
   local/format_lms.sh --src-dir data/lang_nosp data/local/lm
   # Create ConstArpaLm format language model for full 3-gram and 4-gram LMs
-  # TODO update to use smaller LM
-  utils/build_const_arpa_lm.sh data/local/lm/lm_tgsmall.arpa.gz \
-    data/lang_nosp data/lang_nosp_test_tglarge
+#   TODO update to use smaller LM
+#  utils/build_const_arpa_lm.sh data/local/lm/lm_tgsmall.arpa.gz \
+#    data/lang_nosp data/lang_nosp_test_tglarge
 fi
 
 if [ $stage -le 2 ]; then

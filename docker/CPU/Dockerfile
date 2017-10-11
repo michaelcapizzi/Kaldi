@@ -23,6 +23,7 @@ RUN apt-get update -qq \
     python-pip \
     python-wheel \
     tmux \
+    flac \
     vim \
     ffmpeg \
     unzip \

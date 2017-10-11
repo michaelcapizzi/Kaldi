@@ -23,6 +23,7 @@ RUN apt-get update -qq \
     python-pip \
     python-wheel \
     tmux \
+    vim \
     ffmpeg \
     unzip \
     curl \

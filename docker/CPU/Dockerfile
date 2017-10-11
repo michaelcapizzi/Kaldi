@@ -42,8 +42,7 @@ RUN apt-get update -qq \
 
 # install bazel
 RUN wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh
-RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh
-RUN ./bazel-0.5.4-installer-linux-x86_64.sh
+RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh && ./bazel-0.5.4-installer-linux-x86_64.sh
 
 # update pip
 RUN pip install --upgrade pip
@@ -55,8 +54,7 @@ RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 WORKDIR ${HOME}
 RUN git clone https://github.com/michaelcapizzi/kaldi.git
 WORKDIR ${KALDI_PATH}
-RUN git fetch
-RUN git checkout kaldi_instructional
+RUN git fetch && git checkout kaldi_instructional
 
 # install kaldi-specific tools
 WORKDIR ${KALDI_PATH}/tools
@@ -66,15 +64,16 @@ RUN extras/install_irstlm.sh
 RUN export PATH=${PATH}:${IRSTLM}/bin
 # tensorflow (python)
 RUN extras/install_tensorflow_py.sh false
+
 # tensorflow (C)
-WORKDIR ${KALDI_PATH}/tools
-RUN git clone https://github.com/tensorflow/tensorflow
-WORKDIR ${KALDI_PATH}/tools/tensorflow
+#WORKDIR ${KALDI_PATH}/tools
+#RUN git clone https://github.com/tensorflow/tensorflow
+#WORKDIR ${KALDI_PATH}/tools/tensorflow
 #ENV TF_NEED_CUDA=1
-RUN ./configure
-RUN tensorflow/contrib/makefile/download_dependencies.sh
-RUN bazel build -c opt //tensorflow:libtensorflow.so
-RUN bazel build -c opt //tensorflow:libtensorflow_cc.so
+#RUN ./configure
+#RUN tensorflow/contrib/makefile/download_dependencies.sh
+#RUN bazel build -c opt //tensorflow:libtensorflow.so
+#RUN bazel build -c opt //tensorflow:libtensorflow_cc.so
 
 # compile remaining tools
 WORKDIR ${KALDI_PATH}/tools
@@ -83,16 +82,19 @@ RUN make
 # compile kaldi source code
 WORKDIR ${KALDI_PATH}/src
 RUN ./configure --shared
-RUN make depend -j
+RUN make depend
 WORKDIR ${KALDI_PATH}/src
 RUN make
-WORKDIR ${KALDI_PATH}/src/tfrnnlm
-RUN cp ${KALDI_PATH}/tools/tensorflow/tensorflow/contrib/makefile/downloads/nsync/public/nsync*.h /usr/include    # see https://github.com/tensorflow/tensorflow/issues/12482
-RUN make
+
+# compile TF RNN src
+#WORKDIR ${KALDI_PATH}/src/tfrnnlm
+#RUN cp ${KALDI_PATH}/tools/tensorflow/tensorflow/contrib/makefile/downloads/nsync/public/nsync*.h /usr/include    # see https://github.com/tensorflow/tensorflow/issues/12482
+#RUN make
 #WORKDIR ${KALDI_PATH}/src/tfrnnlmbin
 #RUN make
 
 # check installations
-#RUN ${KALDI_PATH}/tools/extras/check_installations.sh
+WORKDIR ${KALDI_PATH}/tools
+RUN extras/check_installations.sh
 
 WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

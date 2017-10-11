@@ -17,6 +17,8 @@ while getopts "s:" opt; do
     esac
 done
 
+echo "stage is $stage"
+
 data_url=www.openslr.org/resources/31
 lm_url=www.openslr.org/resources/11
 
@@ -43,18 +45,18 @@ if [ $stage -le 1 ]; then
     # use underscore-separated names in data directories.
     local/data_prep.sh $data/LibriSpeech/$part data/$(echo $part | sed s/-/_/g)
   done
-#
-#  local/prepare_dict.sh --stage 3 --nj 30 --cmd "$train_cmd" \
-#    data/local/lm data/local/lm data/local/dict_nosp
-#
-#  utils/prepare_lang.sh data/local/dict_nosp \
-#    "<UNK>" data/local/lang_tmp_nosp data/lang_nosp
-#
-#  local/format_lms.sh --src-dir data/lang_nosp data/local/lm
-#  # Create ConstArpaLm format language model for full 3-gram and 4-gram LMs
-#  utils/build_const_arpa_lm.sh data/local/lm/lm_tglarge.arpa.gz \
-#    data/lang_nosp data/lang_nosp_test_tglarge
-#fi
+
+  local/prepare_dict.sh --stage 3 --nj 30 --cmd "$train_cmd" \
+    data/local/lm data/local/lm data/local/dict_nosp
+
+  utils/prepare_lang.sh data/local/dict_nosp \
+    "<UNK>" data/local/lang_tmp_nosp data/lang_nosp
+
+  local/format_lms.sh --src-dir data/lang_nosp data/local/lm
+  # Create ConstArpaLm format language model for full 3-gram and 4-gram LMs
+  utils/build_const_arpa_lm.sh data/local/lm/lm_tglarge.arpa.gz \
+    data/lang_nosp data/lang_nosp_test_tglarge
+fi
 #
 #if [ $stage -le 2 ]; then
 #  mfccdir=mfcc

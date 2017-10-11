@@ -23,7 +23,7 @@ while getopts "s:n:c:" opt; do
             train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/${OPTARG}
             ;;
         \?)
-            echo "Only flag choice is -s"
+            echo "Wrong flags"
             exit 1
             ;;
     esac

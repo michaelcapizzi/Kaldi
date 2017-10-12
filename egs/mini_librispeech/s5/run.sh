@@ -48,7 +48,6 @@ for part in dev-clean-2 train-clean-5; do
 done
 
 if [ $stage -le 0 ]; then
-    # TODO only download one LM
   local/download_lm.sh $lm_url data/local/lm
 fi
 
@@ -66,10 +65,6 @@ if [ $stage -le 1 ]; then
     "<UNK>" data/local/lang_tmp_nosp data/lang_nosp
 
   local/format_lms.sh --src-dir data/lang_nosp data/local/lm
-  # Create ConstArpaLm format language model for full 3-gram and 4-gram LMs
-#   TODO update to use smaller LM
-#  utils/build_const_arpa_lm.sh data/local/lm/lm_tgsmall.arpa.gz \
-#    data/lang_nosp data/lang_nosp_test_tglarge
 fi
 
 if [ $stage -le 2 ]; then

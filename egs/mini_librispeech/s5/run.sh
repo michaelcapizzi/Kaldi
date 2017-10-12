@@ -9,7 +9,6 @@ data=${KALDI_PATH}/egs/mini_librispeech/raw_data
 
 stage=0
 num_proc=2
-#train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/run.pl
 train_cmd=run.pl
 
 while getopts "s:n:c:" opt; do
@@ -21,7 +20,6 @@ while getopts "s:n:c:" opt; do
             num_proc=${OPTARG}
             ;;
         c)
-#            train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/${OPTARG}
             train_cmd=${OPTARG}
             ;;
         \?)
@@ -70,11 +68,6 @@ fi
 
 if [ $stage -le 2 ]; then
   mfccdir=mfcc
-#  if [[  $(hostname -f) ==  *.clsp.jhu.edu ]]; then
-#    mfcc=$(basename mfccdir) # in case was absolute pathname (unlikely), get basename.
-#    utils/create_split_dir.pl /export/b{07,14,16,17}/$USER/kaldi-data/egs/librispeech/s5/$mfcc/storage \
-#      $mfccdir/storage
-#  fi
 
   for part in dev_clean_2 train_clean_5; do
     steps/make_mfcc.sh --cmd "$train_cmd" --nj $num_proc data/$part exp/make_mfcc/$part $mfccdir
@@ -96,12 +89,12 @@ if [ $stage -le 3 ]; then
     for test in dev_clean_2; do
       steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/mono/graph_nosp_tgsmall \
         data/$test exp/mono/decode_nosp_tgsmall_$test
-#    done
-#  )&
-#
-#  steps/align_si.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" \
-#    data/train_clean_5 data/lang_nosp exp/mono exp/mono_ali_train_clean_5
-#fi
+    done
+  )&
+
+  steps/align_si.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" \
+    data/train_500short data/lang_nosp exp/mono exp/mono_ali_train_500short
+fi
 
 # train a first delta + delta-delta triphone system on all utterances
 # TODO do everything on train_500short

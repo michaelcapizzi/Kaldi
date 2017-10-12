@@ -9,8 +9,8 @@ data=${KALDI_PATH}/egs/mini_librispeech/raw_data
 
 stage=0
 num_proc=2
-train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/run.pl
-#train_cmd=run.pl
+#train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/run.pl
+train_cmd=run.pl
 
 while getopts "s:n:c:" opt; do
     case ${opt} in
@@ -21,8 +21,8 @@ while getopts "s:n:c:" opt; do
             num_proc=${OPTARG}
             ;;
         c)
-            train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/${OPTARG}
-#            train_cmd=${OPTARG}
+#            train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/${OPTARG}
+            train_cmd=${OPTARG}
             ;;
         \?)
             echo "Wrong flags"

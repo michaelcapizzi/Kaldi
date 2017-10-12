@@ -118,8 +118,6 @@ else
 
   utils/split_scp.pl $scp $split_scps || exit 1;
 
-  echo $cmd
-
   # add ,p to the input rspecifier so that we can just skip over
   # utterances that have bad wave data.
 

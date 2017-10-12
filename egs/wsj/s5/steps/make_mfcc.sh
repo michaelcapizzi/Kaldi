@@ -45,8 +45,12 @@ fi
 # make $mfccdir an absolute pathname.
 mfccdir=`perl -e '($dir,$pwd)= @ARGV; if($dir!~m:^/:) { $dir = "$pwd/$dir"; } print $dir; ' $mfccdir ${PWD}`
 
+echo "mfccdir is mfccdir"
+
 # use "name" as part of name of the archive.
 name=`basename $data`
+
+echo "name is $name"
 
 mkdir -p $mfccdir || exit 1;
 mkdir -p $logdir || exit 1;
@@ -118,6 +122,7 @@ else
 
   utils/split_scp.pl $scp $split_scps || exit 1;
 
+  echo $cmd
 
   # add ,p to the input rspecifier so that we can just skip over
   # utterances that have bad wave data.

@@ -9,8 +9,8 @@ data=${KALDI_PATH}/egs/mini_librispeech/raw_data
 
 stage=0
 num_proc=2
-#train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/run.pl
-train_cmd=run.pl
+train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/run.pl
+#train_cmd=run.pl
 
 while getopts "s:n:c:" opt; do
     case ${opt} in
@@ -21,8 +21,8 @@ while getopts "s:n:c:" opt; do
             num_proc=${OPTARG}
             ;;
         c)
-#            train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/${OPTARG}
-            train_cmd=${OPTARG}
+            train_cmd=${KALDI_PATH}/egs/mini_librispeech/utils/${OPTARG}
+#            train_cmd=${OPTARG}
             ;;
         \?)
             echo "Wrong flags"
@@ -33,13 +33,9 @@ done
 
 decode_cmd=$train_cmd
 
-echo "train command is $train_cmd"
-echo "decode command is $decode_cmd"
-
 data_url=www.openslr.org/resources/31
 lm_url=www.openslr.org/resources/11
 
-. ./cmd.sh
 . ./path.sh
 
 . utils/parse_options.sh

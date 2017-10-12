@@ -48,10 +48,6 @@ mfccdir=`perl -e '($dir,$pwd)= @ARGV; if($dir!~m:^/:) { $dir = "$pwd/$dir"; } pr
 # use "name" as part of name of the archive.
 name=`basename $data`
 
-echo "name is $name"
-echo "mfccdir is $mfccdir"
-echo "command is $cmd"
-
 mkdir -p $mfccdir || exit 1;
 mkdir -p $logdir || exit 1;
 

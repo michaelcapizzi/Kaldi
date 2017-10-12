@@ -81,7 +81,7 @@ fi
 
 # train a monophone system
 if [ $stage -le 3 ]; then
-  steps/train_mono.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" --num_iters 3 --totgauss 500 --realign_iters "2" \
+  steps/train_mono.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" --num_iters 3 --totgauss 500 \
     data/train_500short data/lang_nosp exp/mono
   (
     utils/mkgraph.sh data/lang_nosp_test_tgsmall \

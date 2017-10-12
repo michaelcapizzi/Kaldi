@@ -31,6 +31,9 @@ done
 
 decode_cmd=$train_cmd
 
+echo "train command is $train_cmd"
+echo "decode command is $decode_cmd"
+
 data_url=www.openslr.org/resources/31
 lm_url=www.openslr.org/resources/11
 

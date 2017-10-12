@@ -45,12 +45,12 @@ fi
 # make $mfccdir an absolute pathname.
 mfccdir=`perl -e '($dir,$pwd)= @ARGV; if($dir!~m:^/:) { $dir = "$pwd/$dir"; } print $dir; ' $mfccdir ${PWD}`
 
-echo "mfccdir is mfccdir"
-
 # use "name" as part of name of the archive.
 name=`basename $data`
 
-echo "name is $name"
+"name is $name"
+"mfccdir is $mfccdir"
+"command is $cmd"
 
 mkdir -p $mfccdir || exit 1;
 mkdir -p $logdir || exit 1;

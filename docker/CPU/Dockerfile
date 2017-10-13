@@ -24,6 +24,7 @@ RUN apt-get update -qq \
     python-wheel \
     tmux \
     vim \
+    flac \
     ffmpeg \
     unzip \
     curl \

@@ -34,9 +34,9 @@ decode_cmd=$train_cmd
 data_url=www.openslr.org/resources/31
 lm_url=www.openslr.org/resources/11
 
-. ./path.sh
+. $KALDI_PATH/egs/mini_librispeech/s5/path.sh
 
-. utils/parse_options.sh
+. $KALDI_PATH/egs/mini_librispeech/utils/parse_options.sh
 
 set -euo pipefail
 

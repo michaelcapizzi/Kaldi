@@ -85,7 +85,6 @@ RUN make
 WORKDIR ${KALDI_PATH}/src
 RUN ./configure --shared
 RUN make depend
-WORKDIR ${KALDI_PATH}/src
 RUN make
 
 # compile TF RNN src

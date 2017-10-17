@@ -42,13 +42,20 @@ set -euo pipefail
 
 mkdir -p $data
 
-for part in dev-clean-2 train-clean-5; do
-  local/download_and_untar.sh $data $data_url $part
-done
+########################
+# STAGE 0: Download data
+########################
 
 if [ $stage -le 0 ]; then
+  for part in dev-clean-2 train-clean-5; do
+    local/download_and_untar.sh $data $data_url $part
+  done
   local/download_lm.sh $lm_url data/local/lm
 fi
+
+#######################
+# STAGE 1: Prepare data
+#######################
 
 if [ $stage -le 1 ]; then
   # format the data as Kaldi data directories
@@ -66,6 +73,10 @@ if [ $stage -le 1 ]; then
   local/format_lms.sh --src-dir data/lang_nosp data/local/lm
 fi
 
+#####################
+# STAGE 2: Make mfccs
+#####################
+
 if [ $stage -le 2 ]; then
   mfccdir=mfcc
 
@@ -74,97 +85,73 @@ if [ $stage -le 2 ]; then
     steps/compute_cmvn_stats.sh data/$part exp/make_mfcc/$part $mfccdir
   done
 
-  # Get the shortest 500 utterances first because those are more likely
-  # to have accurate alignments.
+  # Get the shortest 500 utterances as a subset for quick testing
   utils/subset_data_dir.sh --shortest data/train_clean_5 500 data/train_500short
+
+  # Get the shortest 40 utterances as subset
+  utils/subset_data_dir.sh --shortest data/dev_clean_2 40 data/dev_40short
+
 fi
+
+##################################
+# STAGE 3: Monophones Model (mono)
+##################################
 
 # train a monophone system
 if [ $stage -le 3 ]; then
   steps/train_mono.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" --num_iters 2 --totgauss 500 \
     data/train_500short data/lang_nosp exp/mono
-#  (
-#    utils/mkgraph.sh data/lang_nosp_test_tgsmall \
-#      exp/mono exp/mono/graph_nosp_tgsmall
-#    for test in dev_clean_2; do
-#      steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/mono/graph_nosp_tgsmall \
-#        data/$test exp/mono/decode_nosp_tgsmall_$test
-#    done
-#  )&
   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/mono exp/mono/graph_nosp_tgsmall
   steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/mono/graph_nosp_tgsmall \
-    data/dev_clean_2 exp/mono/decode_nosp_tgsmall_dev_clean_2
+    data/dev_40short exp/mono/decode_nosp_tgsmall_dev_40short
   steps/align_si.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" \
     data/train_500short data/lang_nosp exp/mono exp/mono_ali_train_500short
 fi
 
-# train a first delta + delta-delta triphone system on all utterances
+################################
+# STAGE 4: Triphones Model (tri1)
+################################
+
+# train a first delta + delta-delta triphone system
 if [ $stage -le 4 ]; then
   steps/train_deltas.sh --boost-silence 1.25 --cmd "$train_cmd" --num_iters 2 \
     2000 10000 data/train_500short data/lang_nosp exp/mono_ali_train_500short exp/tri1
-
-   # decode using the tri1 model
-#  (
-#    utils/mkgraph.sh data/lang_nosp_test_tgsmall \
-#      exp/tri1 exp/tri1/graph_nosp_tgsmall
-#    for test in dev_clean_2; do
-#      steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/tri1/graph_nosp_tgsmall \
-#      data/$test exp/tri1/decode_nosp_tgsmall_$test
-#    done
-#  )&
-
   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/tri1 exp/tri1/graph_nosp_tgsmall
   steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/tri1/graph_nosp_tgsmall \
-    data/dev_clean_2 exp/tri1/decode_nosp_tgsmall_dev_clean_2
+    data/dev_40short exp/tri1/decode_nosp_tgsmall_dev_40short
   steps/align_si.sh --nj $num_proc --cmd "$train_cmd" \
     data/train_500short data/lang_nosp exp/tri1 exp/tri1_ali_train_500short
 fi
+
+################################################
+# STAGE 5: Triphones Model with LDA+MLLT (tri2b)
+################################################
 
 # train an LDA+MLLT system.
 if [ $stage -le 5 ]; then
   steps/train_lda_mllt.sh --cmd "$train_cmd" --num_iters 2 \
     --splice-opts "--left-context=3 --right-context=3" 2500 15000 \
     data/train_500short data/lang_nosp exp/tri1_ali_train_500short exp/tri2b
-
-#   decode using the LDA+MLLT model
-#  (
-#    utils/mkgraph.sh data/lang_nosp_test_tgsmall \
-#      exp/tri2b exp/tri2b/graph_nosp_tgsmall
-#    for test in dev_clean_2; do
-#      steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/tri2b/graph_nosp_tgsmall \
-#        data/$test exp/tri2b/decode_nosp_tgsmall_$test
-#    done
-#  )&
-
   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/tri2b exp/tri2b/graph_nosp_tgsmall
   steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/tri2b/graph_nosp_tgsmall \
-    data/dev_clean_2 exp/tri2b/decode_nosp_tgsmall_dev_clean_2
-  # Align utts using the tri2b model
+    data/dev_40short exp/tri2b/decode_nosp_tgsmall_dev_40short
   steps/align_si.sh  --nj $num_proc --cmd "$train_cmd" --use-graphs true \
-    data/train_clean_5 data/lang_nosp exp/tri2b exp/tri2b_ali_train_clean_5
+    data/train_clean_5 data/lang_nosp exp/tri2b exp/tri2b_ali_train_500short
 fi
-#
-## Train tri3b, which is LDA+MLLT+SAT
-#if [ $stage -le 6 ]; then
-#  steps/train_sat.sh --cmd "$train_cmd" 2500 15000 \
-#    data/train_clean_5 data/lang_nosp exp/tri2b_ali_train_clean_5 exp/tri3b
-#
-#  # decode using the tri3b model
-#  (
-#    utils/mkgraph.sh data/lang_nosp_test_tgsmall \
-#      exp/tri3b exp/tri3b/graph_nosp_tgsmall
-#    for test in dev_clean_2; do
-#      steps/decode_fmllr.sh --nj 10 --cmd "$decode_cmd" \
-#        exp/tri3b/graph_nosp_tgsmall data/$test \
-#        exp/tri3b/decode_nosp_tgsmall_$test
-#      steps/lmrescore.sh --cmd "$decode_cmd" data/lang_nosp_test_{tgsmall,tgmed} \
-#        data/$test exp/tri3b/decode_nosp_{tgsmall,tgmed}_$test
-#      steps/lmrescore_const_arpa.sh \
-#        --cmd "$decode_cmd" data/lang_nosp_test_{tgsmall,tglarge} \
-#        data/$test exp/tri3b/decode_nosp_{tgsmall,tglarge}_$test
-#    done
-#  )&
-#fi
+
+####################################################
+# STAGE 6: Triphones Model with LDA+MLLT+SAT (tri3b)
+####################################################
+
+# Train tri3b, which is LDA+MLLT+SAT
+if [ $stage -le 6 ]; then
+  steps/train_sat.sh --cmd "$train_cmd" 2500 15000 \
+    data/train_500short data/lang_nosp exp/tri2b_ali_train_500short exp/tri3b
+   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/tri3b exp/tri3b/graph_nosp_tgsmall
+   steps/decode_fmllr.sh --nj 10 --cmd "$decode_cmd" \
+    exp/tri3b/graph_nosp_tgsmall data/dev_40short \
+    exp/tri3b/decode_nosp_tgsmall_dev_40short
+fi
 #
 ## Now we compute the pronunciation and silence probabilities from training data,
 ## and re-create the lang directory.

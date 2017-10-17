@@ -36,7 +36,7 @@ lm_url=www.openslr.org/resources/11
 
 . $KALDI_PATH/egs/mini_librispeech/s5/path.sh
 
-. $KALDI_PATH/egs/mini_librispeech/utils/parse_options.sh
+. $KALDI_PATH/egs/mini_librispeech/s5/utils/parse_options.sh
 
 set -euo pipefail
 

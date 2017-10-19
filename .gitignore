@@ -70,9 +70,12 @@ GSYMS
 
 # /egs/
 /egs/*/s*/mfcc
+/egs/*/mfcc
 /egs/*/s*/plp
 /egs/*/s*/exp
+/egs/*/exp
 /egs/*/s*/data
+/egs/*/data
 /egs/*/raw_data
 
 # /tools/

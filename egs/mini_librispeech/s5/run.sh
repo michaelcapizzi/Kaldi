@@ -108,9 +108,9 @@ if [ $stage -le 3 ]; then
     data/train_500short data/lang_nosp exp/mono exp/mono_ali_train_500short
 fi
 
-################################
+#################################
 # STAGE 4: Triphones Model (tri1)
-################################
+#################################
 
 # train a first delta + delta-delta triphone system
 if [ $stage -le 4 ]; then
@@ -148,10 +148,21 @@ if [ $stage -le 6 ]; then
   steps/train_sat.sh --cmd "$train_cmd" 2500 15000 \
     data/train_500short data/lang_nosp exp/tri2b_ali_train_500short exp/tri3b
    utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/tri3b exp/tri3b/graph_nosp_tgsmall
-   steps/decode_fmllr.sh --nj 10 --cmd "$decode_cmd" \
+   steps/decode_fmllr.sh --nj $num_proc --cmd "$decode_cmd" \
     exp/tri3b/graph_nosp_tgsmall data/dev_40short \
     exp/tri3b/decode_nosp_tgsmall_dev_40short
 fi
+
+###############
+# STAGE 7: WERs
+###############
+
+if [ $stage -le 7 ]; then
+    echo "WER coming soon"
+fi
+
+# TODO add WER printout?
+
 #
 ## Now we compute the pronunciation and silence probabilities from training data,
 ## and re-create the lang directory.

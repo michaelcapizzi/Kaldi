@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-jupyter notebook --no-browser --ip=0.0.0.0 --allow-root
+jupyter notebook --port 8880 --no-browser --ip=0.0.0.0 --allow-root

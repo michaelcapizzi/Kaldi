@@ -18,6 +18,6 @@ while getopts "p:" opt; do
 done
 
 # cannot link all the way at kaldi root directory
-docker run -it --rm -p port:port \
+docker run -it --rm -p $port:$port \
     -v `pwd`/egs:/home/kaldi/egs \
     docker-kaldi-instructional

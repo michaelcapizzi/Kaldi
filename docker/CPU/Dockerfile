@@ -29,6 +29,7 @@ RUN apt-get update -qq \
     unzip \
     curl \
     g++ \
+    tree \
     libatlas3-base \
     zlib1g-dev \
     make \

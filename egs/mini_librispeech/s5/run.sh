@@ -104,6 +104,8 @@ if [ $stage -le 3 ]; then
   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/mono exp/mono/graph_nosp_tgsmall
   steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/mono/graph_nosp_tgsmall \
     data/dev_40short exp/mono/decode_nosp_tgsmall_dev_40short
+  local/score.sh --cmd "$decode_cmd" data/dev_40short exp/mono/graph_nosp_tgsmall \
+    exp/mono/decode_nosp_tgsmall_dev_40short
   steps/align_si.sh --boost-silence 1.25 --nj $num_proc --cmd "$train_cmd" \
     data/train_500short data/lang_nosp exp/mono exp/mono_ali_train_500short
 fi
@@ -119,6 +121,8 @@ if [ $stage -le 4 ]; then
   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/tri1 exp/tri1/graph_nosp_tgsmall
   steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/tri1/graph_nosp_tgsmall \
     data/dev_40short exp/tri1/decode_nosp_tgsmall_dev_40short
+  local/score.sh --cmd "$decode_cmd" data/dev_40short exp/tri1/graph_nosp_tgsmall \
+    exp/tri1/decode_nosp_tgsmall_dev_40short
   steps/align_si.sh --nj $num_proc --cmd "$train_cmd" \
     data/train_500short data/lang_nosp exp/tri1 exp/tri1_ali_train_500short
 fi
@@ -135,6 +139,8 @@ if [ $stage -le 5 ]; then
   utils/mkgraph.sh data/lang_nosp_test_tgsmall exp/tri2b exp/tri2b/graph_nosp_tgsmall
   steps/decode.sh --nj $num_proc --cmd "$decode_cmd" exp/tri2b/graph_nosp_tgsmall \
     data/dev_40short exp/tri2b/decode_nosp_tgsmall_dev_40short
+  local/score.sh --cmd "$decode_cmd" data/dev_40short exp/tri2b/graph_nosp_tgsmall \
+    exp/tri2b/decode_nosp_tgsmall_dev_40short
   steps/align_si.sh  --nj $num_proc --cmd "$train_cmd" --use-graphs true \
     data/train_clean_5 data/lang_nosp exp/tri2b exp/tri2b_ali_train_500short
 fi
@@ -151,17 +157,27 @@ if [ $stage -le 6 ]; then
    steps/decode_fmllr.sh --nj $num_proc --cmd "$decode_cmd" \
     exp/tri3b/graph_nosp_tgsmall data/dev_40short \
     exp/tri3b/decode_nosp_tgsmall_dev_40short
+#  local/score.sh --cmd "$decode_cmd" data/dev_40short exp/tri3b/graph_nosp_tgsmall \
+#    exp/tri3b/decode_nosp_tgsmall_dev_40short
+  local/score.sh --cmd "$decode_cmd" data/dev_40short exp/tri3b/graph_nosp_tgsmall \
+    exp/tri3b/decode_nosp_tgsmall_dev_40short.si
 fi
 
-###############
-# STAGE 7: WERs
-###############
+######################
+# STAGE 7: report WERs
+######################
 
 if [ $stage -le 7 ]; then
-    echo "WER coming soon"
+  # print out best results for each model
+  for type in mono tri1b tri2b tri3b; do
+    wer=$(grep WER ${type}/decode_nosp_tgsmall_test/wer_* | utils/best_wer.sh | cut -d " " -f 2-)
+    ser=$(grep SER ${type}/decode_nosp_tgsmall_test/wer_* | utils/best_wer.sh | cut -d " " -f 3-)
+    echo "Best results for $type:"
+    echo "WER: ${wer}"
+    echo "SER: ${ser}"
+    echo "-----"
+  done
 fi
-
-# TODO add WER printout?
 
 #
 ## Now we compute the pronunciation and silence probabilities from training data,

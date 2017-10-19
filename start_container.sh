@@ -3,6 +3,8 @@
 # starts existing container
 # must currently be run from kaldi root
 
+# -p which port to open up for jupyter access
+
 port=8880
 
 while getopts "p:" opt; do

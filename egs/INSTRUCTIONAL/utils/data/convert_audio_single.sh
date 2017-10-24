@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# converts audio to PCM using `flac`
+# converts single audio file to PCM using `ffmpeg`
 # It will *automatically* add PCM encoding, and will *optionally* downsample
 
 # ARGUMENTS

@@ -37,9 +37,9 @@ done
 echo "converting audio file ${in} and saving to ${out}"
 
 if [ ! -z ${sample_rate} ]; then
-    ffmpeg -i ${in} -ar ${sample_rate} ${out}
+    ffmpeg -loglevel error -i ${in} -ar ${sample_rate} ${out}
 else
-    ffmpeg -i ${in} ${out}
+    ffmpeg -loglevel error -i ${in} ${out}
 fi
 
 if [ ${remove} == true ]; then

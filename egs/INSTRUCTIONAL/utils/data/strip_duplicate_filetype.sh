@@ -11,3 +11,4 @@ for f in ${ALLFILES[@]}; do
   mv ${f} ${before_filetype}.wav
 done
 
+echo "all files in ${1} have been renamed"

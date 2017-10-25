@@ -12,8 +12,9 @@
 # -r = if present, will remove original audio
 
 remove=false
+verbose=false
 
-while getopts "i:o:s:r" opt; do
+while getopts "i:o:s:rv" opt; do
     case ${opt} in
         i)
             in=${OPTARG}
@@ -27,6 +28,9 @@ while getopts "i:o:s:r" opt; do
         r)
             remove=true
             ;;
+	v)
+	    verbose=true
+	    ;;
         \?)
             echo "Wrong flags"
             exit 1
@@ -34,7 +38,9 @@ while getopts "i:o:s:r" opt; do
     esac
 done
 
-echo "converting audio file ${in} and saving to ${out}"
+if [ ${verbose} == true ]; then
+    echo "converting audio file ${in} and saving to ${out}"
+fi
 
 if [ ! -z ${sample_rate} ]; then
     ffmpeg -loglevel error -i ${in} -ar ${sample_rate} ${out}

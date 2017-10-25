@@ -40,6 +40,7 @@ while getopts "i:o:s:t:r" opt; do
     esac
 done
 
+echo "converting all files in ${in}"
 
 mkdir -p ${out}
 
@@ -77,3 +78,5 @@ done
 if [[ ${remove} == true && ${in} != ${out} ]]; then
     rm -r ${in}
 fi
+
+echo "files in ${in} have been converted"

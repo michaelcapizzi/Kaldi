@@ -10,3 +10,4 @@ for f in ${ALLFILES[@]}; do
   before_filetype=${f%%.*}
   mv ${f} ${before_filetype}.wav
 done
+

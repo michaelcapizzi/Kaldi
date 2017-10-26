@@ -12,32 +12,32 @@ while getopts "w:l:z" opt; do
             ;;
         z)
             purge_oov=true
-            oov=${PATH_TO_KALDI}/egs/nextiva_recipes/data/lang/arpa_oov.txt
+            oov=${KALDI_INSTRUCTIONAL_PATH}/data/lang/arpa_oov.txt
             ;;
     esac
 done
 
 # sourcing the path
-. ${PATH_TO_KALDI}/egs/nextiva_recipes/path.sh
+. ${KALDI_INSTRUCTIONAL_PATH}/path.sh
 
 echo "Preparing language models for test"
 
 for lm_suffix in tg; do
-    test=${PATH_TO_KALDI}/egs/nextiva_recipes/data/lang_test_${lm_suffix}
+    test=${KALDI_INSTRUCTIONAL_PATH}/data/lang_test_${lm_suffix}
     
-    rm -rf ${PATH_TO_KALDI}/egs/nextiva_recipes/data/lang_test_${lm_suffix}
-    cp -r ${PATH_TO_KALDI}/egs/nextiva_recipes/data/lang ${PATH_TO_KALDI}/egs/nextiva_recipes/data/lang_test_${lm_suffix}
+    rm -rf ${KALDI_INSTRUCTIONAL_PATH}/data/lang_test_${lm_suffix}
+    cp -r ${KALDI_INSTRUCTIONAL_PATH}/data/lang ${KALDI_INSTRUCTIONAL_PATH}/data/lang_test_${lm_suffix}
 
     if [ "${purge_oov}" = true ]; then
         # generate OOV list
-        ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/find_arpa_oovs.pl ${words} ${language_model} > ${oov}
+        ${KALDI_INSTRUCTIONAL_PATH}/utils/find_arpa_oovs.pl ${words} ${language_model} > ${oov}
 
 
         # build language model files
         cat ${language_model} | arpa2fst - | fstprint | \
-            ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/remove_oovs.pl ${oov} | \
-            ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/eps2disambig.pl | \
-            ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/s2eps.pl | fstcompile --isymbols=$test/words.txt \
+            ${KALDI_INSTRUCTIONAL_PATH}/utils/remove_oovs.pl ${oov} | \
+            ${KALDI_INSTRUCTIONAL_PATH}/utils/eps2disambig.pl | \
+            ${KALDI_INSTRUCTIONAL_PATH}/utils/s2eps.pl | fstcompile --isymbols=$test/words.txt \
             --osymbols=$test/words.txt --keep_isymbols=false --keep_osymbols=false \
             | fstrmepsilon | fstarcsort --sort_type=ilabel > $test/G.fst
         fstisstochastic $test/G.fst
@@ -46,8 +46,8 @@ for lm_suffix in tg; do
 
         # build language models
         cat ${language_model} | arpa2fst - | fstprint | \
-            ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/eps2disambig.pl | \
-            ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/s2eps.pl | fstcompile --isymbols=$test/words.txt \
+            ${KALDI_INSTRUCTIONAL_PATH}/utils/eps2disambig.pl | \
+            ${KALDI_INSTRUCTIONAL_PATH}/utils/s2eps.pl | fstcompile --isymbols=$test/words.txt \
             --osymbols=$test/words.txt --keep_isymbols=false --keep_osymbols=false \
             | fstrmepsilon | fstarcsort --sort_type=ilabel > $test/G.fst
         fstisstochastic $test/G.fst
@@ -67,7 +67,7 @@ for lm_suffix in tg; do
     # #0 is treated as an empty word.
     mkdir -p tmpdir.g
     awk '{if(NF==1){ printf("0 0 %s %s\n", $1,$1); }} END{print "0 0 #0 #0"; print "0";}' \
-        < ${PATH_TO_KALDI}/egs/nextiva_recipes/data/local/dict/lexicon.txt  >tmpdir.g/select_empty.fst.txt
+        < ${KALDI_INSTRUCTIONAL_PATH}/data/local/dict/lexicon.txt  >tmpdir.g/select_empty.fst.txt
     fstcompile --isymbols=$test/words.txt --osymbols=$test/words.txt \
         tmpdir.g/select_empty.fst.txt | fstarcsort --sort_type=olabel | \
         fstcompose - $test/G.fst > tmpdir.g/empty_words.fst

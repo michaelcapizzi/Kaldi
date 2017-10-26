@@ -209,7 +209,7 @@ mkdir -p ${KALDI_INSTRUCTIONAL_PATH}/data/local/dict
 # the following three steps replace `/local/prepare_dict.sh`
 # copy lexicon files into data/local/dict
 cp ${lexicon} ${KALDI_INSTRUCTIONAL_PATH}/data/local/dict/lexicon.txt
-cp ${lexicon} ${KALDI_INSTRUCTIONAL_PATH}/data/local/dict/lexicon_words.txt
+#cp ${lexicon} ${KALDI_INSTRUCTIONAL_PATH}/data/local/dict/lexicon_words.txt
 
 # remove SIL from phones if present and copy to data/local/dict
 silence_phones_delimited=$(echo ${silence_phones// /|})

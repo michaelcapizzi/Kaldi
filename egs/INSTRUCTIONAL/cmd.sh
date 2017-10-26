@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # set the global variable MEM as the maximum amount of memory you want to utilize (in gigabytes)
 

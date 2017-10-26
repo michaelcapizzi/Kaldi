@@ -24,11 +24,17 @@ if [[ `expr index ${PATH} ${IRSTLM}` != 0 ]]; then
 fi
 build-lm.sh -h || (printf "irstlm not correctly installed or linked" && exit 1)
 
+echo "IRSTLM correctly installed and linked"
+echo "========================"
+
 #####################
 # tensorflow (python)
 #####################
 python -c "import tensorflow as tf" || (printf "tensorflow (python) not correctly installed" \
     && exit 1)
+
+echo "tensorflow for python correctly installed"
+echo "========================"
 
 ################
 # tensorflow (C)
@@ -49,4 +55,13 @@ python -c "import tensorflow as tf" || (printf "tensorflow (python) not correctl
 #########
 # openfst
 #########
-#fstinfo --help || (printf "openfst not correctly installed or linked" && exit 1)
+out_=$(fstinfo --help)
+
+if [[ "${out_}" =~ "Prints out information about" ]]; then
+    fstinfo --help
+else
+    exit 1
+fi
+
+echo "OpenFST correctly installed and linked"
+

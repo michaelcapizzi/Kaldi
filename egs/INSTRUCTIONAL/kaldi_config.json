@@ -43,7 +43,7 @@
       },
       "silence_phones": {
         "flag": "-s",
-        "value": ""
+        "value": "SIL"
       },
       "non_vanilla_prepare_lang_hyperparameters": {
         "flag": "-q",

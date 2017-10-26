@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # This script removes all files generated in `nextiva_recipes` after any step of the process.
 # Ensures a clean state

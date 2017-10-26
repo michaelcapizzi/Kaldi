@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/bin/bash
 
 # This script prepares the data for training by formatting input data properly.
 # NOTE: This script can be run with or without testing data

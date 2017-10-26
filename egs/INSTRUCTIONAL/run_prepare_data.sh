@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # This scripts prepares the data (audio, transcripts, phones list, language model) for later use
 # *Note:* This script can take training and/or testing audio
@@ -9,7 +9,7 @@
 # NOTE: if flag *not* present, assumes segmented transcript files
 # -x <path> = full path to `lexicon.txt` file
 # -p <path> = full path to `phones.txt` file
-# -s <string> = string representing a list of phones representing silence, default=`SIL OOV`
+# -s <string> = string representing a list of phones representing silence, minimally: `SIL`
 # -l <path> = full path to `language_model` file
     # can be OMITTED if building for TIDIGITS
 # -z [no argument] = if present, automatically purge OOV from language model

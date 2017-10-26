@@ -62,7 +62,7 @@ sil_prob=0.5
 phone_symbol_table=              # if set, use a specified phones.txt file.
 # end configuration sections
 
-. ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/parse_options.sh
+. ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_options.sh
 
 if [ $# -ne 4 ]; then
   echo "usage: utils/prepare_lang.sh <dict-src-dir> <oov-dict-entry> <tmp-dir> <lang-dir>"
@@ -94,9 +94,9 @@ mkdir -p $dir $tmpdir $dir/phones
 silprob=false
 [ -f $srcdir/lexiconp_silprob.txt ] && silprob=true
 
-[ -f ${PATH_TO_KALDI}/egs/nextiva_recipes/path.sh ] && . ${PATH_TO_KALDI}/egs/nextiva_recipes/path.sh
+[ -f ${KALDI_INSTRUCTIONAL_PATH}/path.sh ] && . ${KALDI_INSTRUCTIONAL_PATH}/path.sh
 
-! ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/validate_dict_dir.pl $srcdir && \
+! ${KALDI_INSTRUCTIONAL_PATH}/utils/validate_dict_dir.pl $srcdir && \
   echo "*Error validating directory $srcdir*" && exit 1;
 
 if [[ ! -f $srcdir/lexicon.txt ]]; then
@@ -108,8 +108,8 @@ if [[ ! -f $srcdir/lexiconp.txt ]]; then
   perl -ape 's/(\S+\s+)(.+)/${1}1.0\t$2/;' < $srcdir/lexicon.txt > $srcdir/lexiconp.txt || exit 1;
 fi
 
-if ! ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/validate_dict_dir.pl $srcdir >&/dev/null; then
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/validate_dict_dir.pl $srcdir  # show the output.
+if ! ${KALDI_INSTRUCTIONAL_PATH}/utils/validate_dict_dir.pl $srcdir >&/dev/null; then
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/validate_dict_dir.pl $srcdir  # show the output.
   echo "Validation failed (second time)"
   exit 1;
 fi
@@ -228,19 +228,19 @@ else
   # different silence phones will have different GMMs.  [note: here, all "shared split" means
   # is that we may have one GMM for all the states, or we can split on states.  because they're
   # context-independent phones, they don't see the context.]
-  cat $srcdir/{,non}silence_phones.txt | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/apply_map.pl $tmpdir/phone_map.txt > $dir/phones/sets.txt
+  cat $srcdir/{,non}silence_phones.txt | ${KALDI_INSTRUCTIONAL_PATH}/utils/apply_map.pl $tmpdir/phone_map.txt > $dir/phones/sets.txt
   cat $dir/phones/sets.txt | awk '{print "shared", "split", $0;}' > $dir/phones/roots.txt
 fi
 
-cat $srcdir/silence_phones.txt | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/apply_map.pl $tmpdir/phone_map.txt | \
+cat $srcdir/silence_phones.txt | ${KALDI_INSTRUCTIONAL_PATH}/utils/apply_map.pl $tmpdir/phone_map.txt | \
   awk '{for(n=1;n<=NF;n++) print $n;}' > $dir/phones/silence.txt
-cat $srcdir/nonsilence_phones.txt | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/apply_map.pl $tmpdir/phone_map.txt | \
+cat $srcdir/nonsilence_phones.txt | ${KALDI_INSTRUCTIONAL_PATH}/utils/apply_map.pl $tmpdir/phone_map.txt | \
   awk '{for(n=1;n<=NF;n++) print $n;}' > $dir/phones/nonsilence.txt
 cp $srcdir/optional_silence.txt $dir/phones/optional_silence.txt
 cp $dir/phones/silence.txt $dir/phones/context_indep.txt
 
 # if extra_questions.txt is empty, it's OK.
-cat $srcdir/extra_questions.txt 2>/dev/null | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/apply_map.pl $tmpdir/phone_map.txt \
+cat $srcdir/extra_questions.txt 2>/dev/null | ${KALDI_INSTRUCTIONAL_PATH}/utils/apply_map.pl $tmpdir/phone_map.txt \
   >$dir/phones/extra_questions.txt
 
 # Want extra questions about the word-start/word-end stuff. Make it separate for
@@ -259,9 +259,9 @@ fi
 # and produce $tmpdir/lexicon_*disambig.txt
 
 if "$silprob"; then
-  ndisambig=`${PATH_TO_KALDI}/egs/nextiva_recipes/utils/add_lex_disambig.pl --pron-probs --sil-probs $tmpdir/lexiconp_silprob.txt $tmpdir/lexiconp_silprob_disambig.txt`
+  ndisambig=`${KALDI_INSTRUCTIONAL_PATH}/utils/add_lex_disambig.pl --pron-probs --sil-probs $tmpdir/lexiconp_silprob.txt $tmpdir/lexiconp_silprob_disambig.txt`
 else
-  ndisambig=`${PATH_TO_KALDI}/egs/nextiva_recipes/utils/add_lex_disambig.pl --pron-probs $tmpdir/lexiconp.txt $tmpdir/lexiconp_disambig.txt`
+  ndisambig=`${KALDI_INSTRUCTIONAL_PATH}/utils/add_lex_disambig.pl --pron-probs $tmpdir/lexiconp.txt $tmpdir/lexiconp_disambig.txt`
 fi
 ndisambig=$[$ndisambig+1]; # add one disambig symbol for silence in lexicon FST.
 echo $ndisambig > $tmpdir/lex_ndisambig
@@ -361,8 +361,8 @@ cat $tmpdir/align_lexicon.txt | \
  perl -ane '@A = split; print $A[0], " ", join(" ", @A), "\n";' | sort | uniq > $dir/phones/align_lexicon.txt
 
 # create phones/align_lexicon.int
-cat $dir/phones/align_lexicon.txt | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl -f 3- $dir/phones.txt | \
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl -f 1-2 $dir/words.txt > $dir/phones/align_lexicon.int
+cat $dir/phones/align_lexicon.txt | ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl -f 3- $dir/phones.txt | \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl -f 1-2 $dir/words.txt > $dir/phones/align_lexicon.int
 
 # Create the basic L.fst without disambiguation symbols, for use
 # in training.
@@ -370,7 +370,7 @@ cat $dir/phones/align_lexicon.txt | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/s
 if $silprob; then
   # Usually it's the same as having a fixed-prob L.fst
   # it matters a little bit in discriminative trainings
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/make_lexicon_fst_silprob.pl \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/make_lexicon_fst_silprob.pl \
     $tmpdir/lexiconp_silprob_disambig.txt \
     $srcdir/silprob.txt $silphone '#'$ndisambig | \
      sed 's=\#[0-9][0-9]*=<eps>=g' | \
@@ -378,7 +378,7 @@ if $silprob; then
      --keep_isymbols=false --keep_osymbols=false |   \
      fstarcsort --sort_type=olabel > $dir/L.fst || exit 1;
 else
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/make_lexicon_fst.pl \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/make_lexicon_fst.pl \
     --pron-probs \
     $tmpdir/lexiconp.txt \
     $sil_prob $silphone | \
@@ -390,33 +390,33 @@ fi
 # The file oov.txt contains a word that we will map any OOVs to during
 # training.
 echo "$oov_word" > $dir/oov.txt || exit 1;
-cat $dir/oov.txt | ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl $dir/words.txt >$dir/oov.int || exit 1;
+cat $dir/oov.txt | ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl $dir/words.txt >$dir/oov.int || exit 1;
 # integer version of oov symbol, used in some scripts.
 
 # Create these lists of phones in colon-separated integer list form too,
 # for purposes of being given to programs as command-line options.
 for f in silence nonsilence optional_silence disambig context_indep; do
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl $dir/phones.txt <$dir/phones/$f.txt >$dir/phones/$f.int
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl $dir/phones.txt <$dir/phones/$f.txt | \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl $dir/phones.txt <$dir/phones/$f.txt >$dir/phones/$f.int
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl $dir/phones.txt <$dir/phones/$f.txt | \
    awk '{printf(":%d", $1);} END{printf "\n"}' | sed s/:// > $dir/phones/$f.csl || exit 1;
 done
 
 for x in sets extra_questions; do
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl $dir/phones.txt <$dir/phones/$x.txt > $dir/phones/$x.int || exit 1;
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl $dir/phones.txt <$dir/phones/$x.txt > $dir/phones/$x.int || exit 1;
 done
 
-${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl -f 3- $dir/phones.txt <$dir/phones/roots.txt \
+${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl -f 3- $dir/phones.txt <$dir/phones/roots.txt \
    > $dir/phones/roots.int || exit 1;
 
 #if $position_dependent_phones; then
 if [ -f $dir/phones/word_boundary.txt ]; then
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/sym2int.pl -f 1 $dir/phones.txt <$dir/phones/word_boundary.txt \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/sym2int.pl -f 1 $dir/phones.txt <$dir/phones/word_boundary.txt \
     > $dir/phones/word_boundary.int || exit 1;
 fi
 
 silphonelist=`cat $dir/phones/silence.csl`
 nonsilphonelist=`cat $dir/phones/nonsilence.csl`
-${PATH_TO_KALDI}/egs/nextiva_recipes/utils/gen_topo.pl $num_nonsil_states $num_sil_states $nonsilphonelist $silphonelist >$dir/topo
+${KALDI_INSTRUCTIONAL_PATH}/utils/gen_topo.pl $num_nonsil_states $num_sil_states $nonsilphonelist $silphonelist >$dir/topo
 
 
 # Create the lexicon FST with disambiguation symbols, and put it in lang_test.
@@ -426,13 +426,13 @@ phone_disambig_symbol=`grep \#0 $dir/phones.txt | awk '{print $2}'`
 word_disambig_symbol=`grep \#0 $dir/words.txt | awk '{print $2}'`
 
 if $silprob; then
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/make_lexicon_fst_silprob.pl $tmpdir/lexiconp_silprob_disambig.txt $srcdir/silprob.txt $silphone '#'$ndisambig | \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/make_lexicon_fst_silprob.pl $tmpdir/lexiconp_silprob_disambig.txt $srcdir/silprob.txt $silphone '#'$ndisambig | \
      fstcompile --isymbols=$dir/phones.txt --osymbols=$dir/words.txt \
      --keep_isymbols=false --keep_osymbols=false |   \
      fstaddselfloops  "echo $phone_disambig_symbol |" "echo $word_disambig_symbol |" | \
      fstarcsort --sort_type=olabel > $dir/L_disambig.fst || exit 1;
 else
-  ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/make_lexicon_fst.pl --pron-probs $tmpdir/lexiconp_disambig.txt $sil_prob $silphone '#'$ndisambig | \
+  ${KALDI_INSTRUCTIONAL_PATH}/utils/make_lexicon_fst.pl --pron-probs $tmpdir/lexiconp_disambig.txt $sil_prob $silphone '#'$ndisambig | \
      fstcompile --isymbols=$dir/phones.txt --osymbols=$dir/words.txt \
      --keep_isymbols=false --keep_osymbols=false |   \
      fstaddselfloops  "echo $phone_disambig_symbol |" "echo $word_disambig_symbol |" | \
@@ -441,7 +441,7 @@ fi
 
 echo "$(basename $0): validating output directory"
 # change directory to avoid issue with `./path` in `validate_lang.pl`
-cd ${PATH_TO_KALDI}/egs/nextiva_recipes
-! ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/validate_lang.pl $dir && echo "$(basename $0): error validating output" &&  exit 1;
+cd ${KALDI_INSTRUCTIONAL_PATH}
+! ${KALDI_INSTRUCTIONAL_PATH}/utils/validate_lang.pl $dir && echo "$(basename $0): error validating output" &&  exit 1;
 
 exit 0;

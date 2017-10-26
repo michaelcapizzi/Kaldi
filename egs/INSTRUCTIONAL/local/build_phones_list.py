@@ -19,8 +19,23 @@ with open(sys.argv[1], 'r') as f:
     for p in phones_in_word:
       phones[p] += 1
 
-# sort phones
 phones = list(phones)
+
+# determine if lower or upper
+#if phones[0].islower():
+#  case = "lower"
+#else:
+#  case = "upper"
+
+# add silence phone (SIL/sil)
+#if case == "lower":
+#  if "sil" not in phones:
+#    phones.append("sil")
+#else:
+#  if "SIL" not in phones:
+#    phones.append("SIL")
+
+# sort
 phones.sort()
 
 # write out the phones list

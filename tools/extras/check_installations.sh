@@ -11,8 +11,7 @@ if [ -z ${KALDI_PATH} ]; then
 fi
 
 # source file with some path info
-cd ${KALDI_PATH}/egs/INSTRUCTIONAL
-. path.sh
+. ${KALDI_PATH}/egs/INSTRUCTIONAL/path.sh
 
 ##########
 # IRSTLM #
@@ -22,18 +21,17 @@ if [[ `expr index ${PATH} ${IRSTLM}` != 0 ]]; then
     export IRSTLM=${IRSTLM}
     export PATH=${PATH}:${IRSTLM}/bin
 fi
-build-lm.sh -h || (printf "irstlm not correctly installed or linked" && exit 1)
+(build-lm.sh -h && printf "IRSTLM correctly installed and linked\n") \
+    || (printf "IRSTLM not correctly installed or linked\n" && exit 1)
 
-echo "IRSTLM correctly installed and linked"
 echo "========================"
 
 #####################
 # tensorflow (python)
 #####################
-python -c "import tensorflow as tf" || (printf "tensorflow (python) not correctly installed" \
-    && exit 1)
+(python -c "import tensorflow as tf" && printf "tensorflow for python correctly installed\n") \
+    || (printf "tensorflow (python) not correctly installed\n" && exit 1)
 
-echo "tensorflow for python correctly installed"
 echo "========================"
 
 ################
@@ -60,8 +58,8 @@ out_=$(fstinfo --help)
 if [[ "${out_}" =~ "Prints out information about" ]]; then
     fstinfo --help
 else
+    echo "OpenFST not correctly installed or linked"
     exit 1
 fi
 
 echo "OpenFST correctly installed and linked"
-

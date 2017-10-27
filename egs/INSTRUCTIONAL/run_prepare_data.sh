@@ -56,6 +56,9 @@ done
 ##END parse params##
 ############################
 
+# source path
+. ${KALDI_INSTRUCTIONAL_PATH}/path.sh
+
 printf "Timestamp in HH:MM:SS (24 hour format)\n";
 date +%T
 printf "\n"

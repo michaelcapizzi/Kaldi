@@ -19,6 +19,9 @@ while getopts "p:" opt; do
 done
 
 # cannot link all the way at kaldi root directory
+# when I like `pwd`:/home/kaldi
+#   none of the compiled C++ code or openfst code shows up
+# WHY?
 docker run -it --rm -p $port:$port \
     -v `pwd`/egs:/home/kaldi/egs \
     mcapizzi/kaldi_instructional

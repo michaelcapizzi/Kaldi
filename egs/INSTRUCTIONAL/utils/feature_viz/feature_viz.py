@@ -1,6 +1,6 @@
 import numpy as np
 import kaldi_io_for_python.kaldi_io as io
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 

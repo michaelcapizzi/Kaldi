@@ -53,6 +53,9 @@ RUN pip install --upgrade pip
 # install jupyter kernel for bash
 RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 
+# install numpy and matplotlib
+RUN pip install matplotlib numpy
+
 # clone kaldi_instructional
 WORKDIR ${HOME}
 RUN git clone https://github.com/michaelcapizzi/kaldi.git

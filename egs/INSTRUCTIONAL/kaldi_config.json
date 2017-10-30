@@ -55,7 +55,7 @@
     "parameters": {
       "mfcc_config": {
         "flag": "-c",
-        "value": "conf/mfcc-8khz-Josh-energy_false.conf"
+        "value": "conf/mfcc_defaults.conf"
       },
       "train_data_present": {
         "flag": "-n",
@@ -67,7 +67,7 @@
       },
       "num_processors": {
         "flag": "-j",
-        "value": 10
+        "value": 4
       },
       "non_vanilla_compute_cmvn_stats_hyperparameters": {
         "flag": "-q",

@@ -79,15 +79,15 @@
     "parameters": {
       "training_type": {
         "flag": "-i",
-        "value": "deltas"
+        "value": "lda_mllt"
       },
       "num_gaussians": {
         "flag": "-g",
-        "value": 2000
+        "value": 10000
       },
       "num_leaves": {
         "flag": "-l",
-        "value": 500
+        "value": 5000
       },
       "data_reduction_rate": {
         "flag": "-p",
@@ -95,11 +95,11 @@
       },
       "num_processors": {
         "flag": "-j",
-        "value": 10
+        "value": 4
       },
       "non_vanilla_train_mono_hyperparameters": {
         "flag": "-q",
-        "value": "--num_iters 5"
+        "value": null
       },
       "non_vanilla_mono_align_hyperparameters": {
         "flag": "-r",
@@ -107,7 +107,7 @@
       },
       "non_vanilla_train_deltas_first_hyperparameters": {
         "flag": "-s",
-        "value": "--num_iters 5"
+        "value": null
       },
       "non_vanilla_deltas_first_align_hyperparameters": {
         "flag": "-t",

@@ -1,6 +1,5 @@
 import numpy as np
 import kaldi_io_for_python.kaldi_io as io
-#import matplotlib.pyplot as plt
 import plotly.offline as py
 import plotly.graph_objs as go
 
@@ -40,6 +39,39 @@ def read_in_alignments(path_to_alignments_in_phones):
     return dict_
 
 
+def get_grouped_phones_dict(feats_dict, ali_dict):
+    """
+    Builds a <dict> of all features for each phone
+    :param feats_dict: output of read_in_features()
+    :param ali_dict: output of read_in_aligments()
+    :return: <dict> of phone: <list> of features
+    """
+    phones_dict = {}
+    for k in feats_dict:
+        if k in ali_dict:
+            num_frames = get_num_frames(feats_dict[k])
+            for f in range(num_frames):
+                phone_ = ali_dict[k][f]
+                feats = feats_dict[k][f]
+                if phone_ not in phones_dict:
+                    phones_dict[phone_] = [feats]
+                else:
+                    phones_dict[phone_].append(feats)
+    return phones_dict
+
+
+def get_average_mfccs(phones_dict):
+    """
+    Calculates the average `mfcc` for each phone
+    :param phones_dict: output of get_grouped_phones()
+    :return: <dict> of phone: np.array
+    """
+    average_mfcc_dict = {}
+    for k, v in phones_dict.items():
+        average_mfcc_dict[k] = np.mean(v, axis=0)
+    return average_mfcc_dict
+
+
 def get_num_features(frames):
     """
     Gets number of features from a representation of <n> frames
@@ -51,7 +83,7 @@ def get_num_features(frames):
 
 def get_num_frames(frames):
     """
-    Gets number of frames from a represenation of <n> frames
+    Gets number of frames from a representation of <n> frames
     :param frames: <ndarray> of shape (num_frames x num_features) or (num_features,)
     :return: int
     """
@@ -102,11 +134,12 @@ def get_num_frames(frames):
 #     plt.show()
 
 # plotly
-def plot_frames(frames, phones=None):
+def plot_frames(frames, phones=None, average_mfccs_dict=None):
     """
     Plots the mfcc for any number of frames
     :param frames: <numpy.ndarray> of shape num_frames x num_features
     :param phones: a <list> of phones equal to number of frames
+    :param average_mfccs_dict: output of get_average_mfccs()
     :return: plot
     """
     # determine number of feats
@@ -134,6 +167,19 @@ def plot_frames(frames, phones=None):
             mode='lines',
             name=label
         )
+    # add average mfcc
+    if average_mfccs_dict:
+        if not phones:
+            raise Exception("must include phones if average_mfccs_dict")
+        unique_phones = list(set(phones))
+        for p in unique_phones:
+            traces[p] = go.Scatter(
+                x=x_range,
+                y=average_mfccs_dict[p],
+                mode='lines',
+                name='ave mfcc: {}'.format(p),
+                line=dict(width=4, dash='dash')
+            )
     data = [v for k, v in traces.items()]
     layout = go.Layout(
         title='Visualization of {} frames'.format(num_frames),
@@ -149,28 +195,28 @@ def plot_frames(frames, phones=None):
     py.plot(figure)
 
 
-def plot_histogram(frames):
-    """
-    Plots a histogram of values of each feature for any number of frames
-    :param frame: <numpy.ndarray> of shape num_frames x num_features
-    :return: <num_features> histograms
-    """
-    # determine number of features and frames
-    num_feats = get_num_features(frames)
-    num_frames = get_num_frames(frames)
-    # get min and max values of frames
-    min_ = frames.min()
-    max_ = frames.max()
-    # transpose frames so that each dimension is all the values of a feature
-    frames = np.transpose(frames)
-    plt.figure()
-    for feat in range(num_feats):
-        plt.subplot(num_feats, 1, feat+1)
-        plt.hist(
-            x=frames[feat],
-            bins=num_feats
-        )
-    plt.show()
+# def plot_histogram(frames):
+#     """
+#     Plots a histogram of values of each feature for any number of frames
+#     :param frame: <numpy.ndarray> of shape num_frames x num_features
+#     :return: <num_features> histograms
+#     """
+#     # determine number of features and frames
+#     num_feats = get_num_features(frames)
+#     num_frames = get_num_frames(frames)
+#     # get min and max values of frames
+#     min_ = frames.min()
+#     max_ = frames.max()
+#     # transpose frames so that each dimension is all the values of a feature
+#     frames = np.transpose(frames)
+#     plt.figure()
+#     for feat in range(num_feats):
+#         plt.subplot(num_feats, 1, feat+1)
+#         plt.hist(
+#             x=frames[feat],
+#             bins=num_feats
+#         )
+#     plt.show()
 
 
 

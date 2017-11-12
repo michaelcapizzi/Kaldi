@@ -133,7 +133,6 @@ def get_num_frames(frames):
 #     plt.tight_layout(pad=7)
 #     plt.show()
 
-# TODO add colors so average (dashed) can be same color
 # plotly
 def plot_frames(frames, phones=None, average_mfccs_dict=None):
     """

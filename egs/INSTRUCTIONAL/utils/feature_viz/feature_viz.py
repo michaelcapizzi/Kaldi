@@ -149,6 +149,7 @@ def plot_frames(frames, phones=None):
     py.plot(figure)
 
 
+# TODO update for plotly
 def plot_histogram(frames):
     """
     Plots a histogram of values of each feature for any number of frames
@@ -172,5 +173,6 @@ def plot_histogram(frames):
         )
     plt.show()
 
+# TODO build method to get averages of each phone?
 
 

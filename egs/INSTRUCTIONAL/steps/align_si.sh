@@ -1,4 +1,4 @@
-#!/bin/bash
+#!bin/bash
 # Copyright 2012  Johns Hopkins University (Author: Daniel Povey)
 # Apache 2.0
 
@@ -42,9 +42,6 @@ data=$1
 lang=$2
 srcdir=$3
 dir=$4
-
-# added to deal with the hard coding of `utils` path
-cd ${PATH_TO_KALDI}/egs/nextiva_recipes
 
 for f in $data/text $lang/oov.int $srcdir/tree $srcdir/final.mdl; do
   [ ! -f $f ] && echo "$0: expected file $f to exist" && exit 1;

@@ -149,7 +149,7 @@ rm $dir/pre_ali.*.gz
 
 echo "$0: done aligning data."
 
-${KALDI_INSTRUCTIONAL_PATH}/steps/analyze_alignments.sh --cmd "$cmd" $lang $dir
+${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_alignments.sh --cmd "$cmd" $lang $dir
 
 ${KALDI_INSTRUCTIONAL_PATH}/utils/summarize_warnings.pl $dir/log
 

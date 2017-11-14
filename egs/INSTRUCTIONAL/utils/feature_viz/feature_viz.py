@@ -193,7 +193,7 @@ def plot_frames(frames, phones=None, average_mfccs_dict=None):
     )
     figure = go.Figure(data=data, layout=layout)
     py.plot(figure)
-
+    return figure
 
 # TODO update for plotly
 def plot_histogram(frames):

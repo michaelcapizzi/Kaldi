@@ -75,7 +75,6 @@ if __name__ == "__main__":
     # print(command_line_string)
     #
 
-
     if len(sys.argv) == 4:
         single_param_string = retrieve_value(param_json_dict, sys.argv[2], sys.argv[3])
         print(single_param_string)

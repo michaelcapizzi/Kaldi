@@ -53,8 +53,8 @@ RUN pip install --upgrade pip
 # install jupyter kernel for bash
 RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 
-# install numpy and plotly and arpa
-RUN pip install plotly numpy arpa
+# install numpy and plotly and PyNLPI
+RUN pip install plotly numpy pynlpi
 
 # clone kaldi_instructional
 WORKDIR ${HOME}

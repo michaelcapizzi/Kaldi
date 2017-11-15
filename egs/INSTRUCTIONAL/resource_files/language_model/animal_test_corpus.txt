@@ -1,0 +1,3 @@
+<s> the mouse ate the cat </s>
+<s> the tyrannosaurus shot the human </s>
+<s> the triceratops ate the lettuce </s>

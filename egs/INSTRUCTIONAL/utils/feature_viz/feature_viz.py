@@ -193,30 +193,31 @@ def plot_frames(frames, phones=None, average_mfccs_dict=None):
     )
     figure = go.Figure(data=data, layout=layout)
     py.plot(figure)
+    return figure
 
-
-# def plot_histogram(frames):
-#     """
-#     Plots a histogram of values of each feature for any number of frames
-#     :param frame: <numpy.ndarray> of shape num_frames x num_features
-#     :return: <num_features> histograms
-#     """
-#     # determine number of features and frames
-#     num_feats = get_num_features(frames)
-#     num_frames = get_num_frames(frames)
-#     # get min and max values of frames
-#     min_ = frames.min()
-#     max_ = frames.max()
-#     # transpose frames so that each dimension is all the values of a feature
-#     frames = np.transpose(frames)
-#     plt.figure()
-#     for feat in range(num_feats):
-#         plt.subplot(num_feats, 1, feat+1)
-#         plt.hist(
-#             x=frames[feat],
-#             bins=num_feats
-#         )
-#     plt.show()
+# TODO update for plotly
+def plot_histogram(frames):
+    """
+    Plots a histogram of values of each feature for any number of frames
+    :param frame: <numpy.ndarray> of shape num_frames x num_features
+    :return: <num_features> histograms
+    """
+    # determine number of features and frames
+    num_feats = get_num_features(frames)
+    num_frames = get_num_frames(frames)
+    # get min and max values of frames
+    min_ = frames.min()
+    max_ = frames.max()
+    # transpose frames so that each dimension is all the values of a feature
+    frames = np.transpose(frames)
+    plt.figure()
+    for feat in range(num_feats):
+        plt.subplot(num_feats, 1, feat+1)
+        plt.hist(
+            x=frames[feat],
+            bins=num_feats
+        )
+    plt.show()
 
 
 

@@ -14,6 +14,7 @@ ENV KALDI_INSTRUCTIONAL_PATH=${KALDI_PATH}/egs/INSTRUCTIONAL
 # install dependencies
 RUN apt-get update -qq \
  && apt-get install --no-install-recommends -y \
+    graphviz \
     git \
     python \
     python3 \
@@ -53,8 +54,8 @@ RUN pip install --upgrade pip
 # install jupyter kernel for bash
 RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 
-# install numpy and plotly and PyNLPI
-RUN pip install plotly numpy pynlpi
+# install numpy and plotly and PyNLPI and graphviz
+RUN pip install plotly numpy pynlpi graphviz
 
 # clone kaldi_instructional
 WORKDIR ${HOME}

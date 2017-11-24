@@ -28,19 +28,26 @@ def lookup_word(word, sym_table):
     try:
         return sym_table.find(word)
     except:
-        raise Exception("{} not in symbols".format(word))
+        raise Exception('"{}" not in symbols'.format(word))
 
 
-def sequence_to_fst(seq_string, sym_table):
+def sequence_to_fst(seq_string, lm_fst):
     """
     Builds an `fst` to represent a test sentence
     :param seq_string: <str> of the sequence
-    :param sym_table: symbol table from existing fst
-                        existing_fst.input_symbols()
+    :param lm_fst: <openfst.Fst> of the language model
     :return: <openfst.Fst> representing the sequence
     """
     # initialize the fst
     sentence_fst = openfst.Fst()
+    # set SymbolTables from lm fst
+    sentence_fst.set_input_symbols(lm_fst.input_symbols().copy())
+    sentence_fst.set_output_symbols(lm_fst.output_symbols().copy())
+
+    # symbol table to use for lookup
+    lookup_table = lm_fst.input_symbols()
+
+    # begin buildling fst
     states = {}
     # add start state
     states["start"] = sentence_fst.add_state()
@@ -48,11 +55,11 @@ def sequence_to_fst(seq_string, sym_table):
 
     # convert sequence <str> to <list> of indexes
     #  add <s>
-    sentence_idxs = [lookup_word("<s>", sym_table)]
+    sentence_idxs = [lookup_word("<s>", lookup_table)]
     # add words in sequence
-    sentence_idxs.extend([lookup_word(w, sym_table) for w in seq_string.lower().split()])
+    sentence_idxs.extend([lookup_word(w, lookup_table) for w in seq_string.lower().split()])
     # add </s>
-    sentence_idxs.append(lookup_word("</s>", sym_table))
+    sentence_idxs.append(lookup_word("</s>", lookup_table))
 
     # add nodes and arcs for sentence
     for i in range(len(sentence_idxs)):
@@ -96,7 +103,6 @@ def sequence_to_fst(seq_string, sym_table):
         )
     )
     return sentence_fst
-
 
 def check_sequence(seq_string, lm_fst):
     """

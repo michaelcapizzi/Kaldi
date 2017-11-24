@@ -94,45 +94,6 @@ def get_num_frames(frames):
     return num_frames
 
 
-# matplotlib
-# def plot_frame(frames, phones=None):
-#     """
-#     Plots the mfcc for any number of frames
-#     :param frames: <numpy.ndarray> of shape num_frames x num_features
-#     :param phones: a <list> of phones equal to number of frames
-#     :return: plot
-#     """
-#     # determine number of feats
-#     num_feats = get_num_features(frames)
-#     # determine number of frames
-#     num_frames = get_num_frames(frames)
-#     if phones:
-#         # check to make sure num_phones == num_frames
-#         num_phones = len(phones)
-#         if num_phones != num_frames:
-#             raise Exception(
-#                 "the num_frames ({}) != num_phones ({})".format(num_frames, num_phones)
-#             )
-#     # build x ticks
-#     x_range = range(1, num_feats + 1)
-#     plt.xticks(x_range)
-#     plt.ylabel("what does y represent")
-#     plt.xlabel("feature #")
-#     for f in range(num_frames):
-#         if phones:
-#             label = phones[f]
-#         else:
-#             label = 'frame {} of {}'.format(f+1, num_frames)
-#         plt.plot(x_range, frames[f], alpha=0.5, label=label)
-#     plt.legend(
-#         loc='upper right',
-#         shadow=False,
-#         bbox_to_anchor=(1.25, 1),
-#         prop={'size': 5}
-#     )
-#     plt.tight_layout(pad=7)
-#     plt.show()
-
 # plotly
 def plot_frames(frames, mode='line', phones=None, average_mfccs_dict=None):
     """

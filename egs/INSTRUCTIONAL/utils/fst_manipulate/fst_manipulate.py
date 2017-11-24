@@ -113,5 +113,5 @@ def check_sequence(seq_string, lm_fst):
     :param lm_fst: <openfst.Fst> representing the language model
     :return: <openfst.Fst> or None
     """
-    seq_fst = sequence_to_fst(seq_string, lm_fst.input_symbols())
+    seq_fst = sequence_to_fst(seq_string, lm_fst)
     return openfst.compose(lm_fst, seq_fst)

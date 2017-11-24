@@ -134,10 +134,11 @@ def get_num_frames(frames):
 #     plt.show()
 
 # plotly
-def plot_frames(frames, phones=None, average_mfccs_dict=None):
+def plot_frames(frames, mode='line', phones=None, average_mfccs_dict=None):
     """
     Plots the mfcc for any number of frames
     :param frames: <numpy.ndarray> of shape num_frames x num_features
+    :param mode: 'line' or 'bar'
     :param phones: a <list> of phones equal to number of frames
     :param average_mfccs_dict: output of get_average_mfccs()
     :return: plot
@@ -161,12 +162,19 @@ def plot_frames(frames, phones=None, average_mfccs_dict=None):
             label = 'frame {}/{}: {}'.format(f+1, num_frames, phones[f])
         else:
             label = 'frame {}/{}'.format(f+1, num_frames)
-        traces[f] = go.Scatter(
-            x=x_range,
-            y=frames[f],
-            mode='lines',
-            name=label
-        )
+        if mode == 'line':
+	    traces[f] = go.Scatter(
+                x=x_range,
+                y=frames[f],
+                #mode='lines',
+                name=label
+            )
+	else:
+	    traces[f] = go.Bar(
+     		x=x_range,
+		y=frames[f],
+		name=label
+	    )
     # add average mfcc
     if average_mfccs_dict:
         if not phones:
@@ -176,7 +184,7 @@ def plot_frames(frames, phones=None, average_mfccs_dict=None):
             traces[p] = go.Scatter(
                 x=x_range,
                 y=average_mfccs_dict[p],
-                mode='lines',
+                #mode='lines',
                 name='ave mfcc: {}'.format(p),
                 line=dict(width=4, dash='dash')
             )
@@ -188,7 +196,7 @@ def plot_frames(frames, phones=None, average_mfccs_dict=None):
             dtick=True
         ),
         yaxis=dict(
-            title='what does the value of y mean?'
+            title='~ amplitude'
         )
     )
     figure = go.Figure(data=data, layout=layout)

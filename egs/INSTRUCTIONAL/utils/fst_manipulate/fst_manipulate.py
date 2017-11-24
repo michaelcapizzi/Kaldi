@@ -1,4 +1,20 @@
 import pywrapfst as openfst
+import re
+
+
+def write_wrapper(fst_, path_out):
+    """
+    Wraps the native `.draw()` method from `pywrapfst`,
+    but edits the `.dot` file in place to be in portrait mode for easier viewing in notebook
+    """
+    # write out
+    fst_.draw(path_out)
+    # read in
+    dot_in = open(path_out, "r").read()
+    # edit orientation
+    dot_out = re.sub(r'Landscape', 'Portrait', dot_in)
+    with open(path_out, "w") as f:
+        f.write(dot_out)
 
 
 def lookup_word(word, sym_table):
@@ -34,7 +50,7 @@ def sequence_to_fst(seq_string, sym_table):
     #  add <s>
     sentence_idxs = [lookup_word("<s>", sym_table)]
     # add words in sequence
-    sentence_idxs.extend([lookup_word(w, sym_table) for w in sentence_string.lower().split()])
+    sentence_idxs.extend([lookup_word(w, sym_table) for w in seq_string.lower().split()])
     # add </s>
     sentence_idxs.append(lookup_word("</s>", sym_table))
 

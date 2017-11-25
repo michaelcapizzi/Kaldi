@@ -28,7 +28,7 @@ def lookup_word(word, sym_table):
     try:
         return sym_table.find(word)
     except:
-        raise Exception('"{}" not in symbols'.format(word))
+        return sym_table.find("<unk>")
 
 
 def sequence_to_fst(seq_string, lm_fst):

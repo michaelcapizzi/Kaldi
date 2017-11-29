@@ -66,18 +66,18 @@ if [ ! -z ${data_reduction_rate} ]; then
 fi
 
 # determine type of training
-if [ ${training_type} == "deltas" ]; then
+if [ ${training_type} == "mono" ]; then
+    echo "flat start monophone training"
+elif [ ${training_type} == "deltas" ]; then
     echo "single round of delta + delta-delta training"
-elif [ ${training_type} == "deltas_2" ]; then
-    echo "two rounds of delta + delta-delta training"
 elif [ ${training_type} == "lda_mllt" ]; then
     echo "LDA-MLLT training"
 elif [ ${training_type} == "sat" ]; then
     echo "SAT training"
 else
     echo "training type options:"
+    echo "\"mono\" = flat start monophone training, aligned"
     echo "\"deltas\" = single round of delta + delta-delta triphones, aligned"
-    echo "\"deltas_2\" = single round of delta + delta-delta triphones, aligned"
     echo "\"lda_mllt\" = LDA-MLLT triphones aligned with FMLLR"
     echo "\"sat\" = SAT triphones aligned with FMLLR"
     exit 1
@@ -124,13 +124,13 @@ if [ ! -d "exp/monophones" ]; then
 
     fi
 
-fi
-
-if [ ! -d "exp/monophones_aligned" ]; then
-
     printf "Timestamp in HH:MM:SS (24 hour format)\n";
     date +%T
     printf "\n"
+
+fi
+
+if [ ! -d "exp/monophones_aligned" ]; then
 
     # align monophones with data
 
@@ -150,78 +150,38 @@ if [ ! -d "exp/monophones_aligned" ]; then
 
 fi
 
-if [ ! -d "exp/triphones" ]; then
+if [[ ${training_type} != "mono" ]]; then
 
-    # train delta + delta-delta
-    # removed --cmd in original `run`, sticking with default
-    ${KALDI_INSTRUCTIONAL_PATH}/steps/train_deltas.sh \
-        ${non_vanilla_train_deltas_first_hyperparameters} \
-        ${num_leaves} \
-        ${num_gaussians} \
-        ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
-        ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-        ${KALDI_INSTRUCTIONAL_PATH}/exp/monophones_aligned \
-        ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones \
-        || (printf "\n####\n#### ERROR: train_deltas.sh \n####\n\n" && exit 1);
+    if [ ! -d "exp/triphones" ]; then
 
-    printf "Timestamp in HH:MM:SS (24 hour format)\n";
-    date +%T
-    printf "\n"
-
-fi
-
-if [ ! -d "exp/triphones_aligned" ]; then
-
-    # align
-    ${KALDI_INSTRUCTIONAL_PATH}/steps/align_si.sh \
-        ${non_vanilla_deltas_first_align_hyperparameters} \
-        --nj ${num_processors} \
-        ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
-        ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-        ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones \
-        ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
-        || (printf "\n####\n#### ERROR: align_si.sh of triphones \n####\n\n" && exit 1);
-
-fi
-
-# set increased values for second delta + delta-delta stage
-# 25% more than in first stage
-tri_leaves=$(expr ${num_leaves} \/ 4 + ${num_leaves})
-# 50% more than in first stage
-tri_gaussian=$(expr ${num_gaussians} \/ 2 + ${num_gaussians})
-
-if [ ! -d "exp/triphones_2_aligned/" ]; then
-
-    printf "Timestamp in HH:MM:SS (24 hour format)\n";
-    date +%T
-    printf "\n"
-
-    if [[ ${training_type} != "deltas" ]]; then
-
-        # apply second round of delta + delta-delta triphone training
+        # train delta + delta-delta
+        # removed --cmd in original `run`, sticking with default
         ${KALDI_INSTRUCTIONAL_PATH}/steps/train_deltas.sh \
-            ${non_vanilla_deltas_second_hyperparameters} \
-            ${tri_leaves} \
-            ${tri_gaussian} \
+            ${non_vanilla_train_deltas_first_hyperparameters} \
+            ${num_leaves} \
+            ${num_gaussians} \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
-            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2 \
+            ${KALDI_INSTRUCTIONAL_PATH}/exp/monophones_aligned \
+            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones \
             || (printf "\n####\n#### ERROR: train_deltas.sh \n####\n\n" && exit 1);
 
         printf "Timestamp in HH:MM:SS (24 hour format)\n";
         date +%T
         printf "\n"
 
+    fi
+
+    if [ ! -d "exp/triphones_aligned" ]; then
+
         # align
         ${KALDI_INSTRUCTIONAL_PATH}/steps/align_si.sh \
-            ${non_vanilla_deltas_second_align_hyperparameters} \
+            ${non_vanilla_deltas_first_align_hyperparameters} \
             --nj ${num_processors} \
-            --use-graphs true \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2 \
-            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2_aligned \
+            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones \
+            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
             || (printf "\n####\n#### ERROR: align_si.sh of triphones \n####\n\n" && exit 1);
 
         printf "Timestamp in HH:MM:SS (24 hour format)\n";
@@ -232,15 +192,64 @@ if [ ! -d "exp/triphones_2_aligned/" ]; then
 
 fi
 
+## set increased values for second delta + delta-delta stage
+## 25% more than in first stage
+#tri_leaves=$(expr ${num_leaves} \/ 4 + ${num_leaves})
+## 50% more than in first stage
+#tri_gaussian=$(expr ${num_gaussians} \/ 2 + ${num_gaussians})
+#
+#if [ ! -d "exp/triphones_2_aligned/" ]; then
+#
+#    printf "Timestamp in HH:MM:SS (24 hour format)\n";
+#    date +%T
+#    printf "\n"
+#
+#    if [[ ${training_type} != "deltas" ]]; then
+#
+#        # apply second round of delta + delta-delta triphone training
+#        ${KALDI_INSTRUCTIONAL_PATH}/steps/train_deltas.sh \
+#            ${non_vanilla_deltas_second_hyperparameters} \
+#            ${tri_leaves} \
+#            ${tri_gaussian} \
+#            ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
+#            ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
+#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
+#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2 \
+#            || (printf "\n####\n#### ERROR: train_deltas.sh \n####\n\n" && exit 1);
+#
+#        printf "Timestamp in HH:MM:SS (24 hour format)\n";
+#        date +%T
+#        printf "\n"
+#
+#        # align
+#        ${KALDI_INSTRUCTIONAL_PATH}/steps/align_si.sh \
+#            ${non_vanilla_deltas_second_align_hyperparameters} \
+#            --nj ${num_processors} \
+#            --use-graphs true \
+#            ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
+#            ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
+#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2 \
+#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2_aligned \
+#            || (printf "\n####\n#### ERROR: align_si.sh of triphones \n####\n\n" && exit 1);
+#
+#        printf "Timestamp in HH:MM:SS (24 hour format)\n";
+#        date +%T
+#        printf "\n"
+#
+#    fi
+#
+#fi
+
 # set increased values for LDA-MLLT stage
-# 33% more than in delta-delta stage
-lda_leaves=$(expr ${tri_leaves} \/ 3 + ${tri_leaves})
-# 33% more than in delta-delta stage
-lda_gaussian=$(expr ${tri_gaussian} \/ 3 + ${tri_gaussian})
+# 100% more than in delta+delta-delta stage
+lda_leaves=$(expr ${num_leaves} * 2)
+# 100% more than in delta+delta-delta stage
+lda_gaussian=$(expr ${num_gaussian} *2)
 
-if [ ! -d "exp/triphones_lda_aligned" ]; then
+if [[ ${training_type} != "mono" ]] && [[ ${training_type} != "deltas" ]]; then
 
-    if [[ ${training_type} != "deltas" ]] && [[ ${training_type} != "deltas_2" ]]; then
+    if [ ! -d "exp/triphones_lda" ]; then
+
 
         # train LDA-MLLT
         ${KALDI_INSTRUCTIONAL_PATH}/steps/train_lda_mllt.sh \
@@ -249,13 +258,17 @@ if [ ! -d "exp/triphones_lda_aligned" ]; then
             ${lda_gaussian} \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2_aligned \
+            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_lda \
             || (printf "\n####\n#### ERROR: train_lda_mllt.sh \n####\n\n" && exit 1);
 
         printf "Timestamp in HH:MM:SS (24 hour format)\n";
         date +%T
         printf "\n"
+
+    fi
+
+    if [ ! -d "exp/triphones_lda_aligned" ]; then
 
         # align with FMLLR
         ${KALDI_INSTRUCTIONAL_PATH}/steps/align_fmllr.sh \
@@ -265,7 +278,7 @@ if [ ! -d "exp/triphones_lda_aligned" ]; then
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_lda \
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_lda_aligned \
-            || (printf "\n####\n#### ERROR: train_lda_mllt.sh \n####\n\n" && exit 1);
+            || (printf "\n####\n#### ERROR: align_fmllr.sh \n####\n\n" && exit 1);
 
         printf "Timestamp in HH:MM:SS (24 hour format)\n";
         date +%T
@@ -281,9 +294,9 @@ sat_leaves=$(expr ${lda_leaves} \/ 5 + ${lda_leaves})
 # 100% more than LDA-MLLT stage
 sat_gaussian=$(expr ${lda_leaves} + ${lda_leaves})
 
-if [ ! -d "exp/triphones_sat_aligned" ]; then
+if [ ${training_type} == "sat" ]; then
 
-    if [ ${training_type} == "sat" ]; then
+    if [ ! -d "exp/triphones_sat" ]; then
 
         # train SAT
         ${KALDI_INSTRUCTIONAL_PATH}/steps/train_sat.sh \
@@ -295,6 +308,14 @@ if [ ! -d "exp/triphones_sat_aligned" ]; then
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_lda_aligned \
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_sat \
             || (printf "\n####\n#### ERROR: train_lda_mllt.sh \n####\n\n" && exit 1);
+
+        printf "Timestamp in HH:MM:SS (24 hour format)\n";
+        date +%T
+        printf "\n"
+
+    fi
+
+    if [ ! -d "exp/triphones_sat_aligned" ]; then
 
         # align with FMLLR
         ${KALDI_INSTRUCTIONAL_PATH}/steps/align_fmllr.sh \

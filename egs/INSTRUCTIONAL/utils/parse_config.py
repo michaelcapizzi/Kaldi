@@ -79,4 +79,6 @@ if __name__ == "__main__":
         single_param_string = retrieve_value(param_json_dict, sys.argv[2], sys.argv[3])
         print(single_param_string)
     elif len(sys.argv) == 3:
-        print(str(param_json_dict[sys.argv[2]]))
+        for script_key in param_json_dict:
+            if script_key in sys.argv[2]:
+                print(str(param_json_dict[script_key]))

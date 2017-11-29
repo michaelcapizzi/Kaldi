@@ -251,9 +251,9 @@ fi
 
 # set increased values for LDA-MLLT stage
 # 100% more than in delta+delta-delta stage
-lda_leaves=$(expr ${num_leaves} * 2)
+lda_leaves=$(expr ${num_leaves} \* 2)
 # 100% more than in delta+delta-delta stage
-lda_gaussian=$(expr ${num_gaussian} *2)
+lda_gaussian=$(expr ${num_gaussian} \* 2)
 
 if [[ ${training_type} != "mono" ]] && [[ ${training_type} != "deltas" ]]; then
 

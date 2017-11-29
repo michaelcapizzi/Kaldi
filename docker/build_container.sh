@@ -9,7 +9,6 @@
 
 gpu=false
 mem=4g
-threads=2
 
 while getopts "gm:" opt; do
     case ${opt} in

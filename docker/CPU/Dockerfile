@@ -22,11 +22,9 @@ RUN apt-get update -qq \
     python-numpy \
     python-dev \
     python-pip \
-    python-wheel \
     tmux \
     flac \
     vim \
-    flac \
     ffmpeg \
     unzip \
     curl \
@@ -45,8 +43,8 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/*
 
 # install bazel
-RUN wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh
-RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh && ./bazel-0.5.4-installer-linux-x86_64.sh
+#RUN wget https://github.com/bazelbuild/bazel/releases/download/0.5.4/bazel-0.5.4-installer-linux-x86_64.sh
+#RUN chmod +x bazel-0.5.4-installer-linux-x86_64.sh && ./bazel-0.5.4-installer-linux-x86_64.sh
 
 # update pip
 RUN pip install --upgrade pip
@@ -54,8 +52,8 @@ RUN pip install --upgrade pip
 # install jupyter kernel for bash
 RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 
-# install numpy and plotly and PyNLPI and graphviz
-RUN pip install plotly numpy pynlpi graphviz
+# install numpy and plotly and PyNLPl and graphviz
+RUN pip install plotly pynlpl graphviz
 
 # clone kaldi_instructional
 WORKDIR ${HOME}
@@ -69,8 +67,9 @@ WORKDIR ${KALDI_PATH}/tools
 ENV IRSTLM=${KALDI_PATH}/tools/irstlm
 RUN extras/install_irstlm.sh
 RUN export PATH=${PATH}:${IRSTLM}/bin
+
 # tensorflow (python)
-RUN extras/install_tensorflow_py.sh false
+#RUN extras/install_tensorflow_py.sh false
 
 # tensorflow (C)
 #WORKDIR ${KALDI_PATH}/tools

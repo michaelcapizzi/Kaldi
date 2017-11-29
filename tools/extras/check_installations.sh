@@ -11,7 +11,8 @@ if [ -z ${KALDI_PATH} ]; then
 fi
 
 # source file with some path info
-. ${KALDI_PATH}/egs/INSTRUCTIONAL/path.sh
+cd ${KALDI_INSTRUCTIONAL_PATH}
+. /path.sh
 
 ##########
 # IRSTLM #
@@ -29,10 +30,10 @@ echo "========================"
 #####################
 # tensorflow (python)
 #####################
-(python -c "import tensorflow as tf" && printf "tensorflow for python correctly installed\n") \
-    || (printf "tensorflow (python) not correctly installed\n" && exit 1)
-
-echo "========================"
+#(python -c "import tensorflow as tf" && printf "tensorflow for python correctly installed\n") \
+#    || (printf "tensorflow (python) not correctly installed\n" && exit 1)
+#
+#echo "========================"
 
 ################
 # tensorflow (C)

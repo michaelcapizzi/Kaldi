@@ -13,10 +13,8 @@
 # -p <int> = scale to reduce original audio file size to speed up `train_mono.sh`, example `-p 4` = use 1/4 original files
 # -q <string> = non-vanilla hyperparameters to `train_mono.sh`, in the form "--num_iters 50"
 # -r <string> = non-vanilla hyperparameters to `align_si.sh` for monophones, in the form "--beam 20"
-# -s <string> = non-vanilla hyperparameters to `train_deltas.sh` of deltas + deltas-deltas the first time, in the form "--num_iters 50"
-# -t <string> = non-vanilla hyperparameters to `align_si.sh` for deltas + delta-deltas first, in the form "--beam 20"
-# -u <string> = non-vanilla hyperparameters to `train_deltas.sh` of deltas + delta-deltas the second time, in the form "--num_iters 50"
-# -v <string> = non-vanilla hyperparameters to `align_si.sh` for deltas + delta-deltas second, in the form "--beam 20"
+# -s <string> = non-vanilla hyperparameters to `train_deltas.sh` of deltas + deltas-deltas in the form "--num_iters 50"
+# -t <string> = non-vanilla hyperparameters to `align_si.sh` for deltas + delta-deltas in the form "--beam 20"
 # -w <string> = non-vanilla hyperparameters to `train_lda_mllt.sh` for LDA-MLLT, in the form "--beam 20"
 # -x <string> = non-vanilla hyperparameters to `align_fmllr.sh` for LDA-MLLT, in the form "--beam 20"
 # -y <string> = non-vanilla hyperparameters to `train_sat.sh` for SAT, in the form "--beam 20"
@@ -40,10 +38,8 @@ all_params="\
     num_processors \
     non_vanilla_train_mono_hyperparameters \
     non_vanilla_mono_align_hyperparameters \
-    non_vanilla_train_deltas_first_hyperparameters \
-    non_vanilla_deltas_first_align_hyperparameters \
-    non_vanilla_deltas_second_hyperparameters \
-    non_vanilla_deltas_second_align_hyperparameters \
+    non_vanilla_train_deltas_hyperparameters \
+    non_vanilla_deltas_align_hyperparameters \
     non_vanilla_train_lda_mllt_hyperparameters \
     non_vanilla_lda_align_fmllr_hyperparameters \
     non_vanilla_train_sat_hyperparameters \
@@ -163,7 +159,7 @@ if [[ ${training_type} != "mono" ]]; then
         # train delta + delta-delta
         # removed --cmd in original `run`, sticking with default
         ${KALDI_INSTRUCTIONAL_PATH}/steps/train_deltas.sh \
-            ${non_vanilla_train_deltas_first_hyperparameters} \
+            ${non_vanilla_train_deltas_hyperparameters} \
             ${num_leaves} \
             ${num_gaussians} \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
@@ -185,7 +181,7 @@ if [[ ${training_type} != "mono" ]]; then
 
         # align
         ${KALDI_INSTRUCTIONAL_PATH}/steps/align_si.sh \
-            ${non_vanilla_deltas_first_align_hyperparameters} \
+            ${non_vanilla_deltas_align_hyperparameters} \
             --nj ${num_processors} \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
@@ -203,60 +199,11 @@ if [[ ${training_type} != "mono" ]]; then
 
 fi
 
-
-## set increased values for second delta + delta-delta stage
-## 25% more than in first stage
-#tri_leaves=$(expr ${num_leaves} \/ 4 + ${num_leaves})
-## 50% more than in first stage
-#tri_gaussian=$(expr ${num_gaussians} \/ 2 + ${num_gaussians})
-#
-#if [ ! -d "exp/triphones_2_aligned/" ]; then
-#
-#    printf "Timestamp in HH:MM:SS (24 hour format)\n";
-#    date +%T
-#    printf "\n"
-#
-#    if [[ ${training_type} != "deltas" ]]; then
-#
-#        # apply second round of delta + delta-delta triphone training
-#        ${KALDI_INSTRUCTIONAL_PATH}/steps/train_deltas.sh \
-#            ${non_vanilla_deltas_second_hyperparameters} \
-#            ${tri_leaves} \
-#            ${tri_gaussian} \
-#            ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
-#            ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
-#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2 \
-#            || (printf "\n####\n#### ERROR: train_deltas.sh \n####\n\n" && exit 1);
-#
-#        printf "Timestamp in HH:MM:SS (24 hour format)\n";
-#        date +%T
-#        printf "\n"
-#
-#        # align
-#        ${KALDI_INSTRUCTIONAL_PATH}/steps/align_si.sh \
-#            ${non_vanilla_deltas_second_align_hyperparameters} \
-#            --nj ${num_processors} \
-#            --use-graphs true \
-#            ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
-#            ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
-#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2 \
-#            ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_2_aligned \
-#            || (printf "\n####\n#### ERROR: align_si.sh of triphones \n####\n\n" && exit 1);
-#
-#        printf "Timestamp in HH:MM:SS (24 hour format)\n";
-#        date +%T
-#        printf "\n"
-#
-#    fi
-#
-#fi
-
 # set increased values for LDA-MLLT stage
 # 100% more than in delta+delta-delta stage
 lda_leaves=$(expr ${num_leaves} \* 2)
 # 100% more than in delta+delta-delta stage
-lda_gaussian=$(expr ${num_gaussian} \* 2)
+lda_gaussians=$(expr ${num_gaussians} \* 2)
 
 if [[ ${training_type} != "mono" ]] && [[ ${training_type} != "deltas" ]]; then
 
@@ -267,7 +214,7 @@ if [[ ${training_type} != "mono" ]] && [[ ${training_type} != "deltas" ]]; then
         ${KALDI_INSTRUCTIONAL_PATH}/steps/train_lda_mllt.sh \
             ${non_vanilla_train_lda_mllt_hyperparameters} \
             ${lda_leaves} \
-            ${lda_gaussian} \
+            ${lda_gaussians} \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_aligned \
@@ -309,7 +256,7 @@ fi
 # 20% more than LDA-MLLT stage
 sat_leaves=$(expr ${lda_leaves} \/ 5 + ${lda_leaves})
 # 100% more than LDA-MLLT stage
-sat_gaussian=$(expr ${lda_leaves} + ${lda_leaves})
+sat_gaussians=$(expr ${lda_gaussians} + ${lda_gaussians})
 
 if [ ${training_type} == "sat" ]; then
 
@@ -319,7 +266,7 @@ if [ ${training_type} == "sat" ]; then
         ${KALDI_INSTRUCTIONAL_PATH}/steps/train_sat.sh \
             ${non_vanilla_train_sat_hyperparameters} \
             ${sat_leaves} \
-            ${sat_gaussian} \
+            ${sat_gaussians} \
             ${KALDI_INSTRUCTIONAL_PATH}/data/train_dir \
             ${KALDI_INSTRUCTIONAL_PATH}/data/lang \
             ${KALDI_INSTRUCTIONAL_PATH}/exp/triphones_lda_aligned \

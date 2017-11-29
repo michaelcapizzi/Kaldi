@@ -79,7 +79,7 @@
     "parameters": {
       "training_type": {
         "flag": "-i",
-        "value": "mono"
+        "value": "sat"
       },
       "num_gaussians": {
         "flag": "-g",
@@ -105,20 +105,12 @@
         "flag": "-r",
         "value": null
       },
-      "non_vanilla_train_deltas_first_hyperparameters": {
+      "non_vanilla_train_deltas_hyperparameters": {
         "flag": "-s",
         "value": null
       },
-      "non_vanilla_deltas_first_align_hyperparameters": {
+      "non_vanilla_deltas_align_hyperparameters": {
         "flag": "-t",
-        "value": null
-      },
-      "non_vanilla_deltas_second_hyperparameters": {
-        "flag": "-u",
-        "value": null
-      },
-      "non_vanilla_deltas_second_align_hyperparameters": {
-        "flag": "-v",
         "value": null
       },
       "non_vanilla_train_lda_mllt_hyperparameters": {

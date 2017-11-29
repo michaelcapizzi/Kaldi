@@ -130,6 +130,8 @@ if [ ! -d "exp/monophones" ]; then
 
 fi
 
+python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/monophones/kaldi_config_args.json
+
 if [ ! -d "exp/monophones_aligned" ]; then
 
     # align monophones with data
@@ -149,6 +151,8 @@ if [ ! -d "exp/monophones_aligned" ]; then
     printf "\n"
 
 fi
+
+python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/monophones_aligned/kaldi_config_args.json
 
 if [[ ${training_type} != "mono" ]]; then
 
@@ -172,6 +176,8 @@ if [[ ${training_type} != "mono" ]]; then
 
     fi
 
+    python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/triphones/kaldi_config_args.json
+
     if [ ! -d "exp/triphones_aligned" ]; then
 
         # align
@@ -190,7 +196,10 @@ if [[ ${training_type} != "mono" ]]; then
 
     fi
 
+    python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/triphones_aligned/kaldi_config_args.json
+
 fi
+
 
 ## set increased values for second delta + delta-delta stage
 ## 25% more than in first stage
@@ -268,6 +277,8 @@ if [[ ${training_type} != "mono" ]] && [[ ${training_type} != "deltas" ]]; then
 
     fi
 
+    python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/triphones_lda/kaldi_config_args.json
+
     if [ ! -d "exp/triphones_lda_aligned" ]; then
 
         # align with FMLLR
@@ -285,6 +296,8 @@ if [[ ${training_type} != "mono" ]] && [[ ${training_type} != "deltas" ]]; then
         printf "\n"
 
     fi
+
+    python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/triphones_lda_aligned/kaldi_config_args.json
 
 fi
 
@@ -315,6 +328,8 @@ if [ ${training_type} == "sat" ]; then
 
     fi
 
+    python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/triphones_sat/kaldi_config_args.json
+
     if [ ! -d "exp/triphones_sat_aligned" ]; then
 
         # align with FMLLR
@@ -332,5 +347,7 @@ if [ ${training_type} == "sat" ]; then
         printf "\n"
 
     fi
+
+    python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > exp/triphones_sat_aligned/kaldi_config_args.json
 
 fi

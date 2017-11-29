@@ -137,7 +137,9 @@ done
 
 ( cd $dir; rm final.{mdl,occs} 2>/dev/null; ln -s $x.mdl final.mdl; ln -s $x.occs final.occs )
 
+
 ${KALDI_INSTRUCTIONAL_PATH}/utils/summarize_warnings.pl $dir/log
+${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_alignments.sh --cmd "$cmd" $lang $dir
 
 echo Done
 

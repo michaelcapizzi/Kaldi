@@ -160,6 +160,7 @@ ln -s $x.occs $dir/final.occs
 
 # Summarize warning messages...
 ${KALDI_INSTRUCTIONAL_PATH}/utils/summarize_warnings.pl  $dir/log
+${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_alignments.sh --cmd "$cmd" $lang $dir
 
 #echo "$0: Done training system with delta+delta-delta features in $dir"
 

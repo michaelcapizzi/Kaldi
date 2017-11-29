@@ -22,11 +22,9 @@ RUN apt-get update -qq \
     python-numpy \
     python-dev \
     python-pip \
-    python-wheel \
     tmux \
     flac \
     vim \
-    flac \
     ffmpeg \
     unzip \
     curl \
@@ -55,7 +53,7 @@ RUN pip install --upgrade pip
 RUN pip install jupyter bash_kernel ; python -m bash_kernel.install
 
 # install numpy and plotly and PyNLPl and graphviz
-RUN pip install plotly numpy pynlpl graphviz
+RUN pip install plotly pynlpl graphviz
 
 # clone kaldi_instructional
 WORKDIR ${HOME}

@@ -84,7 +84,7 @@ fi
 
 cd $data
 
-if ! tar -xvzf $part.tar.gz; then
+if ! tar -xzf $part.tar.gz; then
   echo "$0: error un-tarring archive $data/$part.tar.gz"
   exit 1;
 fi

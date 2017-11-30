@@ -99,7 +99,7 @@ RUN make
 #RUN make
 
 # check installations
-WORKDIR ${KALDI_PATH}/tools
-RUN extras/check_installations.sh
+#WORKDIR ${KALDI_PATH}/tools
+#RUN extras/check_installations.sh
 
 WORKDIR ${KALDI_INSTRUCTIONAL_PATH}

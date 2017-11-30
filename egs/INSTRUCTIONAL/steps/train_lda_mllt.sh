@@ -225,5 +225,6 @@ ln -s $cur_lda_iter.mat $dir/final.mat
 # Summarize warning messages...
 
 ${KALDI_INSTRUCTIONAL_PATH}/utils/summarize_warnings.pl $dir/log
+${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_alignments.sh --cmd "$cmd" $lang $dir
 
 echo Done training system with LDA+MLLT features in $dir

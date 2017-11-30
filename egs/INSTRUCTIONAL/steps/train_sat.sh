@@ -254,9 +254,8 @@ ln -s $x.occs $dir/final.occs
 ln -s $x.alimdl $dir/final.alimdl
 
 
-steps/diagnostic/analyze_alignments.sh --cmd "$cmd" $lang $dir
 
-utils/summarize_warnings.pl $dir/log
+${KALDI_INSTRUCTIONAL_PATH}/utils/summarize_warnings.pl $dir/log
 (
   echo "$0: Likelihood evolution:"
   for x in `seq $[$num_iters-1]`; do
@@ -266,5 +265,6 @@ utils/summarize_warnings.pl $dir/log
   done
   echo
 ) | tee $dir/log/summary.log
+${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_alignments.sh --cmd "$cmd" $lang $dir
 
 echo Done

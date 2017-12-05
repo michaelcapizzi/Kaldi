@@ -12,6 +12,11 @@ See the `resources` directory.
 Installation
 ------------
 
+**Atmosphere Users**: Your image will *already* contain the `docker` image.
+You do *not* need to run the Installation steps below.
+
+### Building from `Dockerfile`
+
 There is a `Dockerfile` that can be used to build a `docker` image.
 
 ```
@@ -19,8 +24,13 @@ cd docker
 ./build_container.sh
 ```
 
-**Atmosphere Users**: Your image will *already* contain the `docker` image.
-You do *not* need to run the Installation steps above.
+### `Pull`ing from `DockerHub`
+
+You can also `pull` the built image directly from `docker hub` instead of building with the `Dockerfile`.
+
+```
+docker pull mcapizzi/kaldi_instructional
+```
 
 Running `docker` container
 --------------------------

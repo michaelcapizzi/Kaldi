@@ -46,5 +46,3 @@ This will run `jupyter` and show you a `URL` that can be opened in your browser.
 
 Below is an example of the output from `./start_jupyter.sh` and the `URL` you'll need.
 
-
-

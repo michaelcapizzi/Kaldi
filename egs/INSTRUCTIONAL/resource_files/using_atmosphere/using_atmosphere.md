@@ -9,7 +9,7 @@ with the kaldi_instructional resources already loaded.
 
 Go to the cyverse login: [https://user.cyverse.org/services/mine](https://user.cyverse.org/services/mine) and, after logging in, click `LAUNCH` on `Atmosphere`.
 
-![cyverse](images/01_cyverse.png)
+![cyverse](images/01_cyverse.png?raw=true)
 
 You'll arrive at your `Dashboard`.  Here you can see information about your allocations (how much you are using and how much you "have left").  Select `Launch New Instance`.
 

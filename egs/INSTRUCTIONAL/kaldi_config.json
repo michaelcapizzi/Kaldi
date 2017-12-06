@@ -133,29 +133,9 @@
   },
   "run_compile_graph.sh": {
     "parameters": {
-      "phones": {
+      "model_dir": {
         "flag": "-t",
-        "value": "exp/triphones_2_aligned"
-      },
-      "output_graph": {
-        "flag": "-g",
-        "value": null
-      },
-      "output_lexicon_lookup": {
-        "flag": "-l",
-        "value": null
-      },
-      "output_mdl": {
-        "flag": "-o",
-        "value": null
-      },
-      "output_mat": {
-        "flag": "-t",
-        "value": null
-      },
-      "output_index_lexicon": {
-        "flag": "-i",
-        "value": null
+        "value": "exp/triphones"
       },
       "non_vanilla_mkgraph_hyperparameters": {
         "flag": "-q",

@@ -1,7 +1,5 @@
 # docker-kaldi-instructional - A simplified version of Kaldi in Docker
 
-# TODO collapse lines
-
 FROM ubuntu:16.04
 MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 

@@ -98,7 +98,16 @@ If you **do not** add the `-L` argument, you will still be able to access your i
  
 **Note:** You'll be asked for a `password`.  This is your `cyverse` account password.
 
-The `kaldi_instructional_2017` image that you used already has the docker container installed along with all dependencies and compiled `kaldi` code.
+## First Time Access
+
+The `kaldi_instructional_2017` image that you used already has the docker container installed along with all dependencies and compiled `kaldi` code.  
+
+**However**, you **will** need to do a manual `clone` of the repository onto your instance and `checkout` of our branch the **first time** you use your instance.
+
+```
+sudo git clone https://github.com/michaelcapizzi/kaldi.git
+sudo git checkout kaldi_instructional
+```
 
 Now you can follow the instructions in the main `README` for `Running docker container` and `Running jupyter`.
 

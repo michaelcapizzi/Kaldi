@@ -79,7 +79,7 @@
     "parameters": {
       "training_type": {
         "flag": "-i",
-        "value": "sat"
+        "value": "mono"
       },
       "num_gaussians": {
         "flag": "-g",

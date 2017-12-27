@@ -2,6 +2,8 @@
 
 # startup script for kaldi instance
 
+# TODO seems to make /scratch invisible???
+
 # make sure codebase is up-to-date
 cd /scratch
 if [ ! -d "${KALDI_PATH}" ]; then

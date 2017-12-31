@@ -2,16 +2,15 @@
 
 # startup script for kaldi instance
 
-# TODO seems to make /scratch invisible???
-
 # make sure codebase is up-to-date
 cd /scratch
-if [ ! -d "${KALDI_PATH}" ]; then
+if [ ! -d "kaldi" ]; then
   git clone https://github.com/michaelcapizzi/kaldi.git
   wait
   cd kaldi
   git checkout kaldi_instructional
 else
+  cd kaldi
   git checkout kaldi_instructional
   wait
   git pull

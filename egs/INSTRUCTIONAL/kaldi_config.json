@@ -3,19 +3,19 @@
     "parameters": {
       "transcripts": {
         "flag": "-r",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-transcripts.txt"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-transcripts.txt"
       },
       "lexicon": {
         "flag": "-x",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-lexicon.txt"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-lexicon.txt"
       },
       "phones": {
         "flag": "-p",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-phones.txt"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-phones.txt"
       },
       "language_model": {
         "flag": "-l",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/3-gram.pruned.3e-7.arpa"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/3-gram.pruned.3e-7.arpa"
       },
       "purge_oov": {
         "flag": "-z",
@@ -23,11 +23,11 @@
       },
       "train_dir": {
         "flag": "-n",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/dev-clean_audio"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/dev-clean_audio"
       },
       "test_dir": {
         "flag": "-t",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/test-clean_audio"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/test-clean_audio"
       },
       "unsegmented": {
         "flag": "-u",
@@ -147,7 +147,7 @@
     "parameters": {
       "graph_dir": {
         "flag": "-g",
-        "value": "/media/mcapizzi/data/DataFiles/nnet/graph/"
+        "value": "exp/triphones/graph"
       },
       "data_test_dir": {
         "flag": "-t",
@@ -155,11 +155,11 @@
       },
       "decode_dir": {
         "flag": "-d",
-        "value": "/media/mcapizzi/data/DataFiles/nnet/nnet_a_gpu_online/decode_test_dir"
+        "value": "exp/triphones/decode_test_dir"
       },
       "num_processors": {
         "flag": "-j",
-        "value": 6
+        "value": 4
       },
       "weight": {
         "flag": "-w",
@@ -171,7 +171,7 @@
       },
       "save_to": {
         "flag": "-z",
-        "value": "/home/mcapizzi/Desktop/best_model_files/"
+        "value": "/scratch/best_model_files/"
       }
     }
   }

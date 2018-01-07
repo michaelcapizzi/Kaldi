@@ -4,7 +4,7 @@
 
 #ARGUMENTS
 ## REQUIRED
-# -i <string> = type of phone training to do: "deltas", "lda_mllt", or "sat"
+# -i <string> = type of phone training to do: "mono", "deltas", "lda_mllt", or "sat"
 
 ## OPTIONAL
 # -j <int> = number of processors to use, default=2

@@ -1,5 +1,8 @@
 # don't convert binary files
 *.mdl		   binary
+
+# don't convert images
+*.png		   binary
 # On Windows it is important to keep unix-style line endings in all egs/ files.
 egs/**             eol=lf
 

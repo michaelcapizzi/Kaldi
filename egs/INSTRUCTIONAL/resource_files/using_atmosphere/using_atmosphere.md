@@ -105,8 +105,11 @@ The `kaldi_instructional_2017` image that you used already has the docker contai
 **However**, you **will** need to do a manual `clone` of the repository onto your instance and `checkout` of our branch the **first time** you use your instance.
 
 ```
-sudo git clone https://github.com/michaelcapizzi/kaldi.git
-sudo git checkout kaldi_instructional
+cd /scratch                                                   # the location of storage on the Atmosphere instances
+sudo git clone https://github.com/michaelcapizzi/kaldi.git    # clone the repository
+cd kaldi                                                      # move into the newly cloned directory 
+sudo git fetch                                                # fetch the other repository branches
+sudo git checkout kaldi_instructional                         # check out the INSTRUCTIONAL branch
 ```
 
 Now you can follow the instructions in the main `README` for `Running docker container` and `Running jupyter`.

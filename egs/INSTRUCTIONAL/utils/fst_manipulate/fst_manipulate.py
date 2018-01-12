@@ -1,5 +1,6 @@
 import pywrapfst as openfst
 import re
+from math import exp
 
 
 def write_wrapper(fst_, path_out):
@@ -104,6 +105,7 @@ def sequence_to_fst(seq_string, lm_fst):
     )
     return sentence_fst
 
+
 def check_sequence(seq_string, lm_fst):
     """
     Checks a sequence against the language model representing the language model
@@ -115,3 +117,45 @@ def check_sequence(seq_string, lm_fst):
     """
     seq_fst = sequence_to_fst(seq_string, lm_fst)
     return openfst.compose(lm_fst, seq_fst)
+
+
+def get_shortest_path(fst_in):
+    """
+    Generates the shortest path through an FST
+    :param fst_in: <openfst.Fst> 
+    :return: <openfst.Fst> or None
+    """
+    try:
+        return openfst.shortestpath(fst_in)
+    except:
+        return None
+
+
+def calculate_cost(fst_in):
+    """
+    Calculates the cost of shortest path through an FST
+    :param fst_in: <openfst.Fst>
+    :return: <float>
+    """
+    try:
+        return float(openfst.shortestdistance(fst_in)[-1].to_string())
+    except:
+        return None
+
+
+def convert_neg_log_e(neg_log_e):
+    """
+    Removes a negative log, base e value from log space and takes its opposite
+    :param neg_log_e: the negative log, base e value to convert
+    :return: <float>
+    """
+    return float(exp(-neg_log_e))
+
+
+def neg_log_e_to_log_10(neg_log_e):
+    """
+    Converts a negative log likelihood in base e to log base 10
+    :param neg_log_e: the negative log likehood to convert
+    :return: <float>
+    """
+    return -(neg_log_e/2.303)

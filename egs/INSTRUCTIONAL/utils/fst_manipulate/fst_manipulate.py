@@ -159,3 +159,35 @@ def neg_log_e_to_log_10(neg_log_e):
     :return: <float>
     """
     return -(neg_log_e/2.303)
+
+
+def index_fst(fst_in):
+    """
+
+    :param fst_in:
+    :return:
+    """
+    # initialize output dict
+    word_dict = {}
+
+    # symbol table to use for lookup
+    lookup_table = fst_in.input_symbols()
+
+    # traverse all arcs
+    for state in fst_in.states():
+        for arc in fst_in.arcs(state):
+            from_state = state
+            to_state = arc.nextstate
+            word = lookup_table.find(arc.ilabel)
+            weight = float(arc.weight.to_string())
+            dict_ = {
+                "from": from_state,
+                "to": to_state,
+                "weight": weight
+                }
+            if word not in word_dict:
+                word_dict[word] = [dict_]
+            else:
+                word_dict[word].append(dict_)
+
+    return word_dict

@@ -167,27 +167,37 @@ def index_fst(fst_in):
     :param fst_in:
     :return:
     """
-    # initialize output dict
+    # initialize output dict and lookup
     word_dict = {}
+    node_2_word = {}
 
     # symbol table to use for lookup
     lookup_table = fst_in.input_symbols()
 
-    # traverse all arcs
+    
+    # traverse FST to get node IDs for each word and a lookup node_id -> word
     for state in fst_in.states():
-        for arc in fst_in.arcs(state):
-            from_state = state
-            to_state = arc.nextstate
+    	for arc in fst_in.arcs(state):
+	    state = arc.nextstate
             word = lookup_table.find(arc.ilabel)
-            weight = float(arc.weight.to_string())
-            dict_ = {
-                "from": from_state,
-                "to": to_state,
-                "weight": weight
+	    if word not in word_dict:
+		word_dict[word] = {
+		    "state_id": state,
+                     "weights_from": {}
                 }
-            if word not in word_dict:
-                word_dict[word] = [dict_]
-            else:
-                word_dict[word].append(dict_)
+		node_2_word[state] = word
+
+    # traverse a second time to map all weights to tuples
+    for state in fst_in.states():
+	# skip start state
+	if state != fst_in.start():
+            for arc in fst_in.arcs(state):
+                from_state = state
+                to_state = arc.nextstate
+                from_word = node_2_word[from_state]
+                word = lookup_table.find(arc.ilabel)
+                weight = float(arc.weight.to_string())
+                if from_word not in word_dict[word]["weights_from"]:
+		    word_dict[word]["weights_from"][from_word] = weight
 
     return word_dict

@@ -32,6 +32,15 @@ def lookup_word(word, sym_table):
         return sym_table.find("<unk>")
 
 
+def lookup_idx(idx, sym_table):
+    """
+    Gets the word for an index in an existing symbol table
+    :param idx: <int> to lookup
+    :return: <str>
+    """
+    return sym_table.find(idx)
+
+
 def sequence_to_fst(seq_string, lm_fst):
     """
     Builds an `fst` to represent a test sentence
@@ -163,9 +172,12 @@ def neg_log_e_to_log_10(neg_log_e):
 
 def index_fst(fst_in):
     """
-
-    :param fst_in:
-    :return:
+    Analyzes an existing FST and finds:
+        1. the node associated with each word
+        2. the weight for each arc, to and from
+    Also builds a node_2_word lookup
+    :param fst_in: <openfst.Fst>
+    :return: two <dict>s
     """
     # initialize output dict and lookup
     word_dict = {}
@@ -183,11 +195,12 @@ def index_fst(fst_in):
 	    if word not in word_dict:
 		word_dict[word] = {
 		    "state_id": state,
-                     "weights_from": {}
+                     "weights_from": {},
+                     "weights_to": {}
                 }
 		node_2_word[state] = word
 
-    # traverse a second time to map all weights to tuples
+    # traverse a second time to map all weights to and from
     for state in fst_in.states():
 	# skip start state
 	if state != fst_in.start():
@@ -195,9 +208,86 @@ def index_fst(fst_in):
                 from_state = state
                 to_state = arc.nextstate
                 from_word = node_2_word[from_state]
+                to_word = node_2_word[to_state]
                 word = lookup_table.find(arc.ilabel)
                 weight = float(arc.weight.to_string())
                 if from_word not in word_dict[word]["weights_from"]:
 		    word_dict[word]["weights_from"][from_word] = weight
+                if to_word not in word_dict[from_word]["weights_to"]:
+                    word_dict[from_word]["weights_to"][to_word] = weight
+ 
+    return word_dict, node_2_word
 
-    return word_dict
+
+def update_weight(fst_in, from_word, to_word, new_weight):
+    """
+    Updates a single weight on a given FST
+    :param fst_in: <openfst.Fst> to modify
+    :param from_word: <str>
+    :param to_word: <str>
+    :param: new_weight: <float>
+    :return: updated <openfst.Fst>
+    """
+    # make a dict and node_2_word from index_fst()
+    fst_dict, node_2_word = index_fst(fst_in)
+
+    # get a lookup table
+    lookup = fst_in.input_symbols()
+
+    # set from state as idx 
+    from_state = fst_dict[from_word]["state_id"]
+
+    # initialize list to hold all arcs to add
+    arcs_to_keep = []
+
+    # add updated arc
+    arcs_to_keep.append(
+	{
+	    "from_state": from_state,
+	    "to_state": fst_dict[to_word]["state_id"],
+	    "to_word_id": lookup_word(to_word, lookup),
+	    "weight": new_weight
+	}
+    )
+
+    # traverse all arcs and add to arcs_to_keep
+    # except for one to update
+    for arc in fst_in.arcs(from_state):
+	arc_from_word = node_2_word[from_state]
+        arc_to_word = node_2_word[arc.nextstate]
+        arc_weight = float(arc.weight.to_string())
+	if not (arc_from_word == from_word and arc_to_word == to_word):
+	    dict_ = {
+		"from_state": from_state,
+		"to_state": arc.nextstate,
+		"to_word_id": arc.ilabel,
+		"weight": arc_weight
+	    } 
+	    arcs_to_keep.append(dict_)
+
+    # delete all arcs from from_state
+    fst_intermediate = fst_in.delete_arcs(from_state)
+
+    # add back arcs from arcs_to_keep
+    for arc_dict in arcs_to_keep:
+	print("adding: from_state:{} -> arc:{},weight:{} -> to_state:{}".format(
+	     arc_dict["from_state"],
+	     arc_dict["to_word_id"],
+             arc_dict["weight"],
+	     arc_dict["to_state"]
+	     )
+	)
+	fst_in = fst_in.add_arc(
+	    arc_dict["from_state"],
+	    openfst.Arc(
+		arc_dict["to_word_id"],
+		arc_dict["to_word_id"],
+		openfst.Weight(
+		    "tropical",
+		    arc_dict["weight"]
+		),
+		arc_dict["to_state"]
+	    )
+	)
+
+    return fst_in

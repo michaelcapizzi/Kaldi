@@ -155,6 +155,7 @@ def calculate_cost(fst_in):
 def convert_neg_log_e(neg_log_e):
     """
     Removes a negative log, base e value from log space and takes its opposite
+    In other words, converts -ln -> probability
     :param neg_log_e: the negative log, base e value to convert
     :return: <float>
     """
@@ -219,9 +220,68 @@ def index_fst(fst_in):
     return word_dict, node_2_word
 
 
+def add_arc(fst_in, from_word, to_word, weight):
+    """
+    Adds an arc to a given FST
+    Note: Despite returning an updated FST, this  method makes the changes
+    **IN PLACE**, so you may want to make a copy of the original
+    FST before updating the weights
+    :param fst_in: <openfst.Fst> to modify
+    :param from_word: <str>
+    :param to_word: <str>
+    :param weight: <float>
+    :return: updated <openfst.Fst>
+    """
+    # make a dict and node_2_word from index_fst()
+    fst_dict, node_2_word = index_fst(fst_in)
+
+    # get a lookup table
+    lookup = fst_in.input_symbols()
+
+    # set from state as idx
+    from_state = fst_dict[from_word]["state_id"]
+
+    # set to state as idx
+    to_state = fst_dict[to_word]["state_id"]
+
+   
+    fst_in = fst_in.add_arc(
+	from_state,
+        openfst.Arc(
+	    lookup_word(to_word, lookup),
+            lookup_word(to_word, lookup),
+	    openfst.Weight(
+		"tropical",
+		weight
+	    ),
+	    to_state
+	)
+    )
+
+    return fst_in
+
+
+def remove_arc(fst_in, from_word, to_word):
+    """
+    Removes an arc from a given FST
+    Note: Despite returning an updated FST, this  method makes the changes
+    **IN PLACE**, so you may want to make a copy of the original
+    FST before updating the weights
+    :param fst_in: <openfst.Fst> to modify
+    :param from_word: <str>
+    :param to_word: <str>
+    :return: updated <openfst.Fst>
+
+    """
+    pass
+
+
 def update_weight(fst_in, from_word, to_word, new_weight):
     """
     Updates a single weight on a given FST
+    Note: Despite returning an updated FST, this method makes the changes
+          **IN PLACE**, so you may want to make a copy of the original
+          FST before updating weights
     :param fst_in: <openfst.Fst> to modify
     :param from_word: <str>
     :param to_word: <str>

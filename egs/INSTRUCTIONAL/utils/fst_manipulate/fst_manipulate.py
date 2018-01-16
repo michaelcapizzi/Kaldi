@@ -305,7 +305,6 @@ def remove_arc(fst_in, from_word, to_word):
 				)
 			 )
 
-
 	# delete all arcs from from_state
 	fst_intermediate = fst_in.delete_arcs(from_state)
 

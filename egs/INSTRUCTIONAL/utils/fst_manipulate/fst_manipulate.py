@@ -244,16 +244,16 @@ def add_arc(fst_in, from_word, to_word, weight):
 	to_state = fst_dict[to_word]["state_id"]
 
 	fst_in = fst_in.add_arc(
-	    from_state,
+		from_state,
 		openfst.Arc(
-		    lookup_word(to_word, lookup),
 			lookup_word(to_word, lookup),
-		    openfst.Weight(
-		        "tropical",
-		        weight
-		    ),
-		    to_state
-	    )
+			lookup_word(to_word, lookup),
+			openfst.Weight(
+				"tropical",
+				weight
+			),
+			to_state
+		)
 	)
 
 	return fst_in
@@ -300,27 +300,27 @@ def update_weight(fst_in, from_word, to_word, new_weight):
 
 	# add updated arc
 	arcs_to_keep.append(
-	{
-		"from_state": from_state,
-		"to_state": fst_dict[to_word]["state_id"],
-		"to_word_id": lookup_word(to_word, lookup),
-		"weight": new_weight
-	}
+		{
+			"from_state": from_state,
+			"to_state": fst_dict[to_word]["state_id"],
+			"to_word_id": lookup_word(to_word, lookup),
+			"weight": new_weight
+		}
 	)
 
 	# traverse all arcs and add to arcs_to_keep
 	# except for one to update
 	for arc in fst_in.arcs(from_state):
-	arc_from_word = node_2_word[from_state]
+		arc_from_word = node_2_word[from_state]
 		arc_to_word = node_2_word[arc.nextstate]
 		arc_weight = float(arc.weight.to_string())
-	if not (arc_from_word == from_word and arc_to_word == to_word):
-		dict_ = {
-		"from_state": from_state,
-		"to_state": arc.nextstate,
-		"to_word_id": arc.ilabel,
-		"weight": arc_weight
-		}
+		if not (arc_from_word == from_word and arc_to_word == to_word):
+			dict_ = {
+				"from_state": from_state,
+				"to_state": arc.nextstate,
+				"to_word_id": arc.ilabel,
+				"weight": arc_weight
+			}
 		arcs_to_keep.append(dict_)
 
 	# delete all arcs from from_state
@@ -331,20 +331,20 @@ def update_weight(fst_in, from_word, to_word, new_weight):
 	print("adding: from_state:{} -> arc:{},weight:{} -> to_state:{}".format(
 		 arc_dict["from_state"],
 		 arc_dict["to_word_id"],
-			 arc_dict["weight"],
+         arc_dict["weight"],
 		 arc_dict["to_state"]
 		 )
 	)
 	fst_in = fst_in.add_arc(
 		arc_dict["from_state"],
 		openfst.Arc(
-		arc_dict["to_word_id"],
-		arc_dict["to_word_id"],
-		openfst.Weight(
-			"tropical",
-			arc_dict["weight"]
-		),
-		arc_dict["to_state"]
+		    arc_dict["to_word_id"],
+		    arc_dict["to_word_id"],
+		    openfst.Weight(
+			    "tropical",
+			    arc_dict["weight"]
+		    ),
+		    arc_dict["to_state"]
 		)
 	)
 

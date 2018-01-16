@@ -271,7 +271,61 @@ def remove_arc(fst_in, from_word, to_word):
 	:return: updated <openfst.Fst>
 
 	"""
-	pass
+	# make a dict and node_2_word from index_fst()
+	fst_dict, node_2_word = index_fst(fst_in)
+
+	# get a lookup table
+	lookup = fst_in.input_symbols()
+
+	# set from state as idx
+	from_state = fst_dict[from_word]["state_id"]
+
+	# initialize list to hold all arcs to add
+	arcs_to_keep = []
+
+	# traverse all arcs and add to arcs_to_keep
+	# except for one to remove
+	for arc in fst_in.arcs(from_state):
+		arc_from_word = node_2_word[from_state]
+		arc_to_word = node_2_word[arc.nextstate]
+		arc_weight = float(arc.weight.to_string())
+		if not (arc_from_word == from_word and arc_to_word == to_word):
+			dict_ = {
+				"from_state": from_state,
+				"to_state": arc.nextstate,
+				"to_word_id": arc.ilabel,
+				"weight": arc_weight
+			}
+			arcs_to_keep.append(dict_)
+		else:
+			print("removing: from_state:{} -> arc:{} -> to_state:{}".format(
+				 from_state,
+				 arc.ilabel,
+				 arc.nextstate
+				)
+			 )
+
+
+	# delete all arcs from from_state
+	fst_intermediate = fst_in.delete_arcs(from_state)
+
+	# add back arcs from arcs_to_keep
+	for arc_dict in arcs_to_keep:
+		fst_in = fst_in.add_arc(
+			arc_dict["from_state"],
+			openfst.Arc(
+				arc_dict["to_word_id"],
+				arc_dict["to_word_id"],
+				openfst.Weight(
+					"tropical",
+					arc_dict["weight"]
+				),
+				arc_dict["to_state"]
+			)
+		)
+
+	return fst_in
+
 
 
 def update_weight(fst_in, from_word, to_word, new_weight):
@@ -321,31 +375,31 @@ def update_weight(fst_in, from_word, to_word, new_weight):
 				"to_word_id": arc.ilabel,
 				"weight": arc_weight
 			}
-		arcs_to_keep.append(dict_)
+			arcs_to_keep.append(dict_)
 
 	# delete all arcs from from_state
 	fst_intermediate = fst_in.delete_arcs(from_state)
 
 	# add back arcs from arcs_to_keep
 	for arc_dict in arcs_to_keep:
-	print("adding: from_state:{} -> arc:{},weight:{} -> to_state:{}".format(
-		 arc_dict["from_state"],
-		 arc_dict["to_word_id"],
-         arc_dict["weight"],
-		 arc_dict["to_state"]
-		 )
-	)
-	fst_in = fst_in.add_arc(
-		arc_dict["from_state"],
-		openfst.Arc(
-		    arc_dict["to_word_id"],
-		    arc_dict["to_word_id"],
-		    openfst.Weight(
-			    "tropical",
-			    arc_dict["weight"]
-		    ),
-		    arc_dict["to_state"]
+		print("adding: from_state:{} -> arc:{},weight:{} -> to_state:{}".format(
+			 arc_dict["from_state"],
+			 arc_dict["to_word_id"],
+			 arc_dict["weight"],
+			 arc_dict["to_state"]
+			 )
 		)
-	)
+		fst_in = fst_in.add_arc(
+			arc_dict["from_state"],
+			openfst.Arc(
+				arc_dict["to_word_id"],
+				arc_dict["to_word_id"],
+				openfst.Weight(
+					"tropical",
+					arc_dict["weight"]
+				),
+				arc_dict["to_state"]
+			)
+		)
 
 	return fst_in

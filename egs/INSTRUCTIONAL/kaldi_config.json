@@ -165,6 +165,14 @@
         "flag": "-w",
         "value": 10
       },
+      "beam": {
+        "flag": "-b",
+        "value": 13.0
+      },
+      "max_active": {
+        "flag": "-m",
+        "value": 7000
+      }
       "non_vanilla_decode_hyperparameters": {
         "flag": "-q",
         "value": null

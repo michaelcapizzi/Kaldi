@@ -3,19 +3,19 @@
     "parameters": {
       "transcripts": {
         "flag": "-r",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-transcripts.txt"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-transcripts.txt"
       },
       "lexicon": {
         "flag": "-x",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-lexicon.txt"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-lexicon.txt"
       },
       "phones": {
         "flag": "-p",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-phones.txt"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/librispeech-phones.txt"
       },
       "language_model": {
         "flag": "-l",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/3-gram.pruned.3e-7.arpa"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/3-gram.pruned.3e-7.arpa"
       },
       "purge_oov": {
         "flag": "-z",
@@ -23,11 +23,11 @@
       },
       "train_dir": {
         "flag": "-n",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/dev-clean_audio"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/dev-clean_audio"
       },
       "test_dir": {
         "flag": "-t",
-        "value": "/home/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/test-clean_audio"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/test-clean_audio"
       },
       "unsegmented": {
         "flag": "-u",
@@ -79,7 +79,7 @@
     "parameters": {
       "training_type": {
         "flag": "-i",
-        "value": "sat"
+        "value": "mono"
       },
       "num_gaussians": {
         "flag": "-g",
@@ -133,29 +133,9 @@
   },
   "run_compile_graph.sh": {
     "parameters": {
-      "phones": {
+      "model_dir": {
         "flag": "-t",
-        "value": "exp/triphones_2_aligned"
-      },
-      "output_graph": {
-        "flag": "-g",
-        "value": null
-      },
-      "output_lexicon_lookup": {
-        "flag": "-l",
-        "value": null
-      },
-      "output_mdl": {
-        "flag": "-o",
-        "value": null
-      },
-      "output_mat": {
-        "flag": "-t",
-        "value": null
-      },
-      "output_index_lexicon": {
-        "flag": "-i",
-        "value": null
+        "value": "exp/triphones"
       },
       "non_vanilla_mkgraph_hyperparameters": {
         "flag": "-q",
@@ -167,7 +147,7 @@
     "parameters": {
       "graph_dir": {
         "flag": "-g",
-        "value": "/media/mcapizzi/data/DataFiles/nnet/graph/"
+        "value": "exp/triphones/graph"
       },
       "data_test_dir": {
         "flag": "-t",
@@ -175,11 +155,11 @@
       },
       "decode_dir": {
         "flag": "-d",
-        "value": "/media/mcapizzi/data/DataFiles/nnet/nnet_a_gpu_online/decode_test_dir"
+        "value": "exp/triphones/decode_test_dir"
       },
       "num_processors": {
         "flag": "-j",
-        "value": 6
+        "value": 4
       },
       "weight": {
         "flag": "-w",
@@ -191,7 +171,7 @@
       },
       "save_to": {
         "flag": "-z",
-        "value": "/home/mcapizzi/Desktop/best_model_files/"
+        "value": "/scratch/best_model_files/"
       }
     }
   }

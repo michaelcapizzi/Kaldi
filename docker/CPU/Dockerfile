@@ -1,12 +1,10 @@
 # docker-kaldi-instructional - A simplified version of Kaldi in Docker
 
-# TODO collapse lines
-
 FROM ubuntu:16.04
 MAINTAINER Michael Capizzi <mcapizzi@email.arizona.edu>
 
 # ENV and ARG variables
-ARG HOME=/home/
+ARG HOME=/scratch
 ENV SHELL=/bin/bash
 ENV KALDI_PATH=${HOME}/kaldi
 ENV KALDI_INSTRUCTIONAL_PATH=${KALDI_PATH}/egs/INSTRUCTIONAL

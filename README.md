@@ -35,7 +35,7 @@ docker pull mcapizzi/kaldi_instructional
 Running `docker` container
 --------------------------
 
-Once the `docker` container exists, it can be run easily with `./start_container.sh` which is found in the project root (`/home/kaldi`).
+Once the `docker` container exists, it can be run easily with `./start_container.sh` which is found in the project root (`/scratch/kaldi`).
 This will open port `8880` by default to access the `jupyter` kernel.  
 If you prefer a different port it can be added with the `-p` flag.
 
@@ -49,9 +49,9 @@ This will open port `8880` on your instance as well so that you can use `jupyter
 **Note:** If you plan on using a different port, replace `8880` and then be sure to add the `-p` flag when running `.start_container.sh`.
 
 ```
-mcapizzi@vm142-92: cd /home/kaldi
-mcapizzi@vm142-92:/home/kaldi$ sudo ./start_container.sh 
-root@1c35c7b03e94:/home/kaldi/egs/INSTRUCTIONAL#
+mcapizzi@vm142-92: cd /scratch/kaldi
+mcapizzi@vm142-92:/scratch/kaldi$ sudo ./start_container.sh 
+root@1c35c7b03e94:/scratch/kaldi/egs/INSTRUCTIONAL#
 ```
 
 You'll know your "inside" the `container` if you see the `root` as the user and the `#` on command line.
@@ -66,7 +66,7 @@ Below is an example of the output from `./start_jupyter.sh` and the `URL` you'll
 
 
 ```
-root@1c35c7b03e94:/home/kaldi/egs/INSTRUCTIONAL# ./start_jupyter.sh 
+root@1c35c7b03e94:/scratch/kaldi/egs/INSTRUCTIONAL# ./start_jupyter.sh 
 [I 19:26:00.626 NotebookApp] Writing notebook server cookie secret to /root/.local/share/jupyter/runtime/notebook_cookie_secret
 [I 19:26:01.003 NotebookApp] Serving notebooks from local directory: /home/kaldi/egs/INSTRUCTIONAL
 [I 19:26:01.003 NotebookApp] 0 active kernels
@@ -88,15 +88,15 @@ Running `jupyter` in `tmux` (optional)
 `tmux` is installed on your instance and allows you to easily switch between terminal windows **without closing them**.  You can find how to use `tmux` [here](https://www.sitepoint.com/tmux-a-simple-start/), but it's recommended that you start a  `tmux` window for your `docker` container so that you can easily switch back and forth from a running `jupyter` kernel and a command line.
 
 ```
-mcapizzi@vm142-43:~$ cd /home/kaldi/
+mcapizzi@vm142-43:~$ cd /scratch/kaldi/
 mcapizzi@vm142-43:/home/kaldi$ tmux new-session -s docker
 ```
 
 This will create a "new" session named `docker` (with a green trim).
  
 ```
-mcapizzi@vm142-43:/home/kaldi$ ./start_container.sh 
-root@b05dc5a5939a:/home/kaldi/egs/INSTRUCTIONAL# ./start_jupyter.sh 
+mcapizzi@vm142-43:/scratch/kaldi$ ./start_container.sh 
+root@b05dc5a5939a:/scratch/kaldi/egs/INSTRUCTIONAL# ./start_jupyter.sh 
 [I 16:28:49.199 NotebookApp] Writing notebook server cookie secret to /root/.local/share/jupyter/runtime/notebook_cookie_secret
 [I 16:28:49.313 NotebookApp] Serving notebooks from local directory: /home/kaldi/egs/INSTRUCTIONAL
 [I 16:28:49.313 NotebookApp] 0 active kernels

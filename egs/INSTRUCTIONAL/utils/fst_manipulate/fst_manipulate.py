@@ -104,6 +104,7 @@ def sequence_to_fst(seq_string, lm_fst):
     )
     return sentence_fst
 
+
 def check_sequence(seq_string, lm_fst):
     """
     Checks a sequence against the language model representing the language model

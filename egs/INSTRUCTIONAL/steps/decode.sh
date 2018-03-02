@@ -61,7 +61,7 @@ sdata=$data/split$nj;
 
 # splits data for parallelization
 mkdir -p $dir/log
-[[ -d $sdata && $data/feats.scp -ot $sdata ]] || split_data.sh $data $nj || exit 1;
+[[ -d $sdata && $data/feats.scp -ot $sdata ]] || ${KALDI_INSTRUCTIONAL_PATH}/utils/split_data.sh --per-utt $data $nj || exit 1;
 echo $nj > $dir/num_jobs
 
 # looks for `.mdl` file if not specified in command line

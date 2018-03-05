@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# This script will generate predicted transcriptions for test data found in `nextiva_recipes/data/test_dir`
+# This script will generate predicted transcriptions for test data found in `data/test_dir`
 
 # ARGUMENTS
 ### REQUIRED
@@ -18,7 +18,7 @@
 # OUTPUTS
 # Creates one or more subdirectories in `data/test_dir/split*/` equal to setting of `-j` where
 # files are copied for each parallel process
-# Creates a `decode` directory, housing logs and all output files
+# Creates a `decode_test_dir` directory, housing logs and all output files
 
 ############################
 ##BEGIN parse params##
@@ -60,7 +60,7 @@ weight_lower=$(expr ${weight} - 2)
 weight_upper=$(expr ${weight} + 2)
 
 # decode
-${PATH_TO_KALDI}/egs/nextiva_recipes/steps/decode.sh \
+${KALDI_INSTRUCTIONAL_PATH}/steps/decode.sh \
     ${non_vanilla_decode_hyperparameters} \
     --model ${model} \
     --nj ${num_processors} \
@@ -71,7 +71,6 @@ ${PATH_TO_KALDI}/egs/nextiva_recipes/steps/decode.sh \
     ${data_test_dir} \
     ${decode_dir} \
     || (printf "\n####\n#### ERROR: decode.sh \n####\n\n" && exit 1);
-
 
 #Print timestamp in HH:MM:SS (24 hour format)
 printf "Timestamp in HH:MM:SS (24 hour format)\n";
@@ -85,7 +84,7 @@ if [ ! -z "${save_to}" ]; then
     mkdir -p ${save_to}
 
     # saves transcripts (only for one run ==> $weight)
-    ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/int2sym.pl -f 2- \
+    ${KALDI_INSTRUCTIONAL_PATH}/utils/int2sym.pl -f 2- \
         ${graph_dir}/words.txt ${decode_dir}/scoring/${weight}.tra \
         > ${save_to}/predicted_transcripts_${weight}.txt \
         || (printf "\n####\n#### ERROR: int2sym.pl\n####\n\n" && exit 1);
@@ -95,6 +94,7 @@ if [ ! -z "${save_to}" ]; then
     sers=$(grep SER ${decode_dir}/wer_*)
 
     printf '%s\n' "${wers[@]}" > ${save_to}/results.txt
+    echo >> ${save_to}/results.txt
     printf '%s\n' "${sers[@]}" >> ${save_to}/results.txt
 
     # copy entire decode_dir to save_to
@@ -106,7 +106,7 @@ if [ ! -z "${save_to}" ]; then
 else
 
     # outputs transcripts (only for one run ==> $weight)
-    ${PATH_TO_KALDI}/egs/nextiva_recipes/utils/int2sym.pl -f 2- \
+    ${KALDI_INSTRUCTIONAL_PATH}/utils/int2sym.pl -f 2- \
         ${graph_dir}/words.txt ${decode_dir}/scoring/${weight}.tra \
         || (printf "\n####\n#### ERROR: int2sym.pl\n####\n\n" && exit 1);
 

@@ -15,7 +15,7 @@ max_active=7000
 beam=13.0
 lattice_beam=6.0
 acwt=0.083333 # note: only really affects pruning (scoring is on lattices).
-num_threads=1 # if >1, will use gmm-latgen-faster-parallel
+num_threads=1 # if >1, will use gmm-latgen-faster-paralleli
 parallel_opts=  # ignored now.
 scoring_opts=
 # note: there are no more min-lmwt and max-lmwt options, instead use
@@ -61,7 +61,7 @@ sdata=$data/split$nj;
 
 # splits data for parallelization
 mkdir -p $dir/log
-[[ -d $sdata && $data/feats.scp -ot $sdata ]] || split_data.sh $data $nj || exit 1;
+[[ -d $sdata && $data/feats.scp -ot $sdata ]] || ${KALDI_INSTRUCTIONAL_PATH}/utils/split_data.sh --per-utt $data $nj || exit 1;
 echo $nj > $dir/num_jobs
 
 # looks for `.mdl` file if not specified in command line
@@ -146,7 +146,7 @@ fi
 if ! $skip_scoring ; then
   [ ! -x ${KALDI_INSTRUCTIONAL_PATH}/local/score.sh ] && \
     echo "Not scoring because local/score.sh does not exist or not executable." && exit 1;
-  ${KALDI_INSTRUCTIONAL_PATH}/local/score.sh --cmd "$cmd" $scoring_opts $data $graphdir $dir ||
+  ${KALDI_INSTRUCTIONAL_PATH}/local/score.sh --min_lmwt ${min_lmwt} --max_lmwt ${max_lmwt} --cmd "$cmd" $scoring_opts $data $graphdir $dir ||
     { echo "$0: Scoring failed. (ignore by '--skip-scoring true')"; exit 1; }
 fi
 

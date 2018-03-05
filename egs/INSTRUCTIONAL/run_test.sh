@@ -59,6 +59,9 @@ model=${decode_srcdir}/final.mdl
 weight_lower=$(expr ${weight} - 2)
 weight_upper=$(expr ${weight} + 2)
 
+# get start time
+start=$(date +%s)
+
 # decode
 ${KALDI_INSTRUCTIONAL_PATH}/steps/decode.sh \
     ${non_vanilla_decode_hyperparameters} \
@@ -71,11 +74,6 @@ ${KALDI_INSTRUCTIONAL_PATH}/steps/decode.sh \
     ${data_test_dir} \
     ${decode_dir} \
     || (printf "\n####\n#### ERROR: decode.sh \n####\n\n" && exit 1);
-
-# get start time
-start=$(date +%s)
-
-python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > ${decode_dir}/kaldi_config_args.json
 
 # get end time
 end=$(date +%s)
@@ -101,6 +99,8 @@ echo "raw elapsed: ${elapsed}"
 echo
 echo "${minutes}:${seconds}" | tee ${decode_dir}/runtime
 echo
+
+python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > ${decode_dir}/kaldi_config_args.json
 
 if [ ! -z "${save_to}" ]; then
 

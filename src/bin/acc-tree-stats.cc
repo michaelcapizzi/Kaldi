@@ -28,7 +28,7 @@
 /** @brief Accumulate tree statistics for decision tree training. The
 program reads in a feature archive, and the corresponding alignments,
 and generates the sufficient statistics for the decision tree
-creation. Context width and central phone position are used to
+creation. Context ourcewidth and central phone position are used to
 identify the contexts.Transition model is used as an input to identify
 the PDF's and the phones.  */
 int main(int argc, char *argv[]) {

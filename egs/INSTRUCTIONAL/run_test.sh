@@ -93,10 +93,9 @@ for lmwt in $(seq ${weight_lower} ${weight_upper}); do
         ${decode_dir}
 done
 
-printf "Time to decode and score in MM:SS\n";
-echo "raw elapsed: ${elapsed}"
-# save decoding time to file
 echo
+printf "Time to decode and score in MM:SS\n";
+# save decoding time to file
 echo "${minutes}:${seconds}" | tee ${decode_dir}/runtime
 echo
 

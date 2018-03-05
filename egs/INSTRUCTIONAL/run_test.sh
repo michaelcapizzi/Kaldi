@@ -72,12 +72,30 @@ ${KALDI_INSTRUCTIONAL_PATH}/steps/decode.sh \
     ${decode_dir} \
     || (printf "\n####\n#### ERROR: decode.sh \n####\n\n" && exit 1);
 
-#Print timestamp in HH:MM:SS (24 hour format)
-printf "Timestamp in HH:MM:SS (24 hour format)\n";
-date +%T
-printf "\n"
+# get start time
+start=$(date +%s)
 
 python ${KALDI_INSTRUCTIONAL_PATH}/utils/parse_config.py $1 $0 > ${decode_dir}/kaldi_config_args.json
+
+# analyze lattices
+for lmwt in $(seq ${weight_lower} ${weight_upper}); do
+    echo "analyzing resulting lattices with weight=${lwmt}"
+    ${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_lats.sh \
+        --acwt ${lmwt} \
+        ${graph_dir} \
+        ${decode_dir}
+done
+
+# get end time
+end=$(date +%s)
+# get elapsed time
+elapsed=$(expr ${end} - ${start})
+# convert to minutes:seconds
+minutes=$(expr ${elapsed} \/ 60)
+seconds=$(expr ${elapsed} - ${minutes} \* 60)
+printf "Time to decode and score in MM:SS\n";
+# save decoding time to file
+echo "${minutes}:${seconds}" | tee ${decode_dir}/runtime
 
 if [ ! -z "${save_to}" ]; then
 

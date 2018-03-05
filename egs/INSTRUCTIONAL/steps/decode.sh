@@ -143,6 +143,7 @@ if [ $stage -le 0 ]; then
     $model $graphdir/HCLG.fst "$feats" "ark:|gzip -c > $dir/lat.JOB.gz" || exit 1;
 fi
 
+# score
 if ! $skip_scoring ; then
   [ ! -x ${KALDI_INSTRUCTIONAL_PATH}/local/score.sh ] && \
     echo "Not scoring because local/score.sh does not exist or not executable." && exit 1;

@@ -87,8 +87,10 @@ seconds=$(expr ${elapsed} - ${minutes} \* 60)
 
 # analyze lattices
 for lmwt in $(seq ${weight_lower} ${weight_upper}); do
+    # convert lmwt -> acwt
+    acwt=$(awk "BEGIN {printf \"%.1f\",1.0/${lmwt}}")
     ${KALDI_INSTRUCTIONAL_PATH}/steps/diagnostic/analyze_lats.sh \
-        --acwt ${lmwt} \
+        --acwt ${acwt} \
         ${graph_dir} \
         ${decode_dir}
 done

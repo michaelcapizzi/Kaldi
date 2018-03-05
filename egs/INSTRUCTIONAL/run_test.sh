@@ -94,8 +94,8 @@ if [ ! -z "${save_to}" ]; then
     wers=$(grep WER ${decode_dir}/wer_*)
     sers=$(grep SER ${decode_dir}/wer_*)
 
-    printf '%s\n' "${wer[@]}" > ${save_to}/results.txt
-    printf '%s\n' "${ser[@]}" >> ${save_to}/results.txt
+    printf '%s\n' "${wers[@]}" > ${save_to}/results.txt
+    printf '%s\n' "${sers[@]}" >> ${save_to}/results.txt
 
     # copy entire decode_dir to save_to
     cp -r ${decode_dir} ${save_to}

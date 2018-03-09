@@ -23,7 +23,7 @@
       },
       "train_dir": {
         "flag": "-n",
-        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/dev-clean_audio"
+        "value": "/scratch/kaldi/egs/INSTRUCTIONAL/raw_data/LibriSpeech/train-clean-100_audio"
       },
       "test_dir": {
         "flag": "-t",
@@ -135,7 +135,7 @@
     "parameters": {
       "model_dir": {
         "flag": "-t",
-        "value": "exp/triphones_lda"
+        "value": "exp/triphones"
       },
       "non_vanilla_mkgraph_hyperparameters": {
         "flag": "-q",
@@ -147,7 +147,7 @@
     "parameters": {
       "graph_dir": {
         "flag": "-g",
-        "value": "exp/triphones/graph"
+        "value": "exp/triphones_lda/graph"
       },
       "data_test_dir": {
         "flag": "-t",
@@ -155,7 +155,7 @@
       },
       "decode_dir": {
         "flag": "-d",
-        "value": "exp/triphones/decode_test_dir"
+        "value": "exp/triphones_lda/decode_test_dir"
       },
       "num_processors": {
         "flag": "-j",
@@ -172,14 +172,14 @@
       "max_active": {
         "flag": "-m",
         "value": 7000
-      }
+      },
       "non_vanilla_decode_hyperparameters": {
         "flag": "-q",
         "value": null
       },
       "save_to": {
         "flag": "-z",
-        "value": "/scratch/best_model_files/"
+        "value": "exp/experiments/default_experiment_triphones_lda/"
       }
     }
   }
